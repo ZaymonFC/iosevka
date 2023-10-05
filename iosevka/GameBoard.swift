@@ -4,7 +4,7 @@ typealias Position = (x: Int, y: Int)
 
 struct GameBoard {
   let size: Int
-  private(set) var letters: [[Character]]
+  public private(set) var letters: [[Character]]
     
   init(size: Int) {
     self.size = size

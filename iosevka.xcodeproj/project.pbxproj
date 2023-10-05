@@ -18,6 +18,8 @@
 		C8450D8A2ACF6A8500A1E582 /* GameBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D892ACF6A8500A1E582 /* GameBoard.swift */; };
 		C8450D8C2ACF6DF600A1E582 /* TrieTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D8B2ACF6DF600A1E582 /* TrieTests.swift */; };
 		C8450D8E2ACF722C00A1E582 /* Solver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D8D2ACF722C00A1E582 /* Solver.swift */; };
+		C894D4A02ACF771E00C3739C /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D49F2ACF771E00C3739C /* Game.swift */; };
+		C894D4A22ACF799600C3739C /* GameBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D4A12ACF799600C3739C /* GameBoardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +54,8 @@
 		C8450D892ACF6A8500A1E582 /* GameBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoard.swift; sourceTree = "<group>"; };
 		C8450D8B2ACF6DF600A1E582 /* TrieTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrieTests.swift; sourceTree = "<group>"; };
 		C8450D8D2ACF722C00A1E582 /* Solver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solver.swift; sourceTree = "<group>"; };
+		C894D49F2ACF771E00C3739C /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		C894D4A12ACF799600C3739C /* GameBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +113,8 @@
 				C8450D852ACF694400A1E582 /* Trie.swift */,
 				C8450D892ACF6A8500A1E582 /* GameBoard.swift */,
 				C8450D8D2ACF722C00A1E582 /* Solver.swift */,
+				C894D49F2ACF771E00C3739C /* Game.swift */,
+				C894D4A12ACF799600C3739C /* GameBoardView.swift */,
 			);
 			path = iosevka;
 			sourceTree = "<group>";
@@ -270,9 +276,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8450D8E2ACF722C00A1E582 /* Solver.swift in Sources */,
+				C894D4A02ACF771E00C3739C /* Game.swift in Sources */,
 				C8450D8A2ACF6A8500A1E582 /* GameBoard.swift in Sources */,
 				C8450D862ACF694400A1E582 /* Trie.swift in Sources */,
 				C8450D5E2ACF692900A1E582 /* ContentView.swift in Sources */,
+				C894D4A22ACF799600C3739C /* GameBoardView.swift in Sources */,
 				C8450D5C2ACF692900A1E582 /* iosevkaApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
