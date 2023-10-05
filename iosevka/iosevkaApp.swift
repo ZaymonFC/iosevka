@@ -2,7 +2,7 @@
 //  iosevkaApp.swift
 //  iosevka
 //
-//  Created by Zaymon Foulds-Cook on 5/10/2023.
+//  Created by Zaymon Antonio on 5/10/2023.
 //
 
 import SwiftUI

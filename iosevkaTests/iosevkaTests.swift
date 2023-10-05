@@ -1,10 +1,3 @@
-//
-//  iosevkaTests.swift
-//  iosevkaTests
-//
-//  Created by Zaymon Foulds-Cook on 5/10/2023.
-//
-
 import XCTest
 @testable import iosevka
 
