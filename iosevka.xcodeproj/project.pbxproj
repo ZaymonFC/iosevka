@@ -18,8 +18,9 @@
 		C8450D8A2ACF6A8500A1E582 /* GameBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D892ACF6A8500A1E582 /* GameBoard.swift */; };
 		C8450D8C2ACF6DF600A1E582 /* TrieTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D8B2ACF6DF600A1E582 /* TrieTests.swift */; };
 		C8450D8E2ACF722C00A1E582 /* Solver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D8D2ACF722C00A1E582 /* Solver.swift */; };
-		C894D4A02ACF771E00C3739C /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D49F2ACF771E00C3739C /* Game.swift */; };
 		C894D4A22ACF799600C3739C /* GameBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D4A12ACF799600C3739C /* GameBoardView.swift */; };
+		C894D4A52ACFC60200C3739C /* ObservableStore in Frameworks */ = {isa = PBXBuildFile; productRef = C894D4A42ACFC60200C3739C /* ObservableStore */; };
+		C894D4A72ACFC79C00C3739C /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D4A62ACFC79C00C3739C /* GameState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,8 +55,8 @@
 		C8450D892ACF6A8500A1E582 /* GameBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoard.swift; sourceTree = "<group>"; };
 		C8450D8B2ACF6DF600A1E582 /* TrieTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrieTests.swift; sourceTree = "<group>"; };
 		C8450D8D2ACF722C00A1E582 /* Solver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solver.swift; sourceTree = "<group>"; };
-		C894D49F2ACF771E00C3739C /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		C894D4A12ACF799600C3739C /* GameBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardView.swift; sourceTree = "<group>"; };
+		C894D4A62ACFC79C00C3739C /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C894D4A52ACFC60200C3739C /* ObservableStore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,8 +115,8 @@
 				C8450D852ACF694400A1E582 /* Trie.swift */,
 				C8450D892ACF6A8500A1E582 /* GameBoard.swift */,
 				C8450D8D2ACF722C00A1E582 /* Solver.swift */,
-				C894D49F2ACF771E00C3739C /* Game.swift */,
 				C894D4A12ACF799600C3739C /* GameBoardView.swift */,
+				C894D4A62ACFC79C00C3739C /* GameState.swift */,
 			);
 			path = iosevka;
 			sourceTree = "<group>";
@@ -161,6 +163,9 @@
 			dependencies = (
 			);
 			name = iosevka;
+			packageProductDependencies = (
+				C894D4A42ACFC60200C3739C /* ObservableStore */,
+			);
 			productName = iosevka;
 			productReference = C8450D582ACF692900A1E582 /* iosevka.app */;
 			productType = "com.apple.product-type.application";
@@ -233,6 +238,9 @@
 				Base,
 			);
 			mainGroup = C8450D4F2ACF692900A1E582;
+			packageReferences = (
+				C894D4A32ACFC60200C3739C /* XCRemoteSwiftPackageReference "ObservableStore" */,
+			);
 			productRefGroup = C8450D592ACF692900A1E582 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -276,10 +284,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8450D8E2ACF722C00A1E582 /* Solver.swift in Sources */,
-				C894D4A02ACF771E00C3739C /* Game.swift in Sources */,
 				C8450D8A2ACF6A8500A1E582 /* GameBoard.swift in Sources */,
 				C8450D862ACF694400A1E582 /* Trie.swift in Sources */,
 				C8450D5E2ACF692900A1E582 /* ContentView.swift in Sources */,
+				C894D4A72ACFC79C00C3739C /* GameState.swift in Sources */,
 				C894D4A22ACF799600C3739C /* GameBoardView.swift in Sources */,
 				C8450D5C2ACF692900A1E582 /* iosevkaApp.swift in Sources */,
 			);
@@ -601,6 +609,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C894D4A32ACFC60200C3739C /* XCRemoteSwiftPackageReference "ObservableStore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/subconsciousnetwork/ObservableStore";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C894D4A42ACFC60200C3739C /* ObservableStore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C894D4A32ACFC60200C3739C /* XCRemoteSwiftPackageReference "ObservableStore" */;
+			productName = ObservableStore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C8450D502ACF692900A1E582 /* Project object */;
 }

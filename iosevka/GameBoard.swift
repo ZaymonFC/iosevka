@@ -1,6 +1,6 @@
 import Foundation
 
-typealias Position = (x: Int, y: Int)
+struct Position: Equatable { var x: Int; var y: Int }
 
 struct GameBoard {
   let size: Int
@@ -35,10 +35,16 @@ extension GameBoard {
       let newY = position.y + dy[i]
             
       if newX >= 0, newX < size, newY >= 0, newY < size {
-        neighbors.append((newX, newY))
+        neighbors.append(Position(x: newX, y: newY))
       }
     }
         
     return neighbors
+  }
+}
+
+extension GameBoard: Equatable {
+  static func == (lhs: GameBoard, rhs: GameBoard) -> Bool {
+    return lhs.letters == rhs.letters
   }
 }
