@@ -2,35 +2,39 @@ import Foundation
 import ObservableStore
 
 enum GameAction {
-  case initBoard(solver: Solver)
+  case newGame
   case selectLetter(position: Position)
   case submitWord
 }
 
 struct GameState: ModelProtocol {
   var gameBoard: GameBoard
-  var solver: Solver
-  var selectedCells: [Position]
-  var foundWords: [String]
-  var possibleWords: Set<String>
+  var solver: Solver = .init()
+  var selectedCells: [Position] = []
+  var foundWords: [String] = []
+  var possibleWords: Set<String> = []
+
+  init() {
+    gameBoard = GameBoard(size: 4)
+    possibleWords = solver.findAllWords(board: gameBoard)
+  }
 
   static func update(
     state: GameState,
     action: GameAction,
-    environment: Void
+    environment: AppEnvironment
   ) -> Update<GameState> {
     var draft = state
 
     switch action {
-    case .initBoard(let solver):
+    case .newGame:
       draft.selectedCells.removeAll()
       draft.foundWords.removeAll()
 
       let gameBoard = GameBoard(size: 4)
 
       draft.gameBoard = gameBoard
-      draft.solver = solver
-      draft.possibleWords = solver.findAllWords(board: gameBoard)
+      draft.possibleWords = state.solver.findAllWords(board: gameBoard)
 
     case .selectLetter(let position):
       // Check that the new position is a neighbour of the last selection

@@ -3,10 +3,15 @@ import Foundation
 let minimumWordLength = 3
 
 class Solver {
-  let trie: Trie
   var validWords: Set<String> = []
+  let trie: Trie
     
   init() {
+    // Check that dictionary.txt is included in the bundle
+    guard let _ = Bundle.main.path(forResource: "dictionary", ofType: "txt") else {
+      fatalError("Couldn't find dictionary.txt in the bundle")
+    }
+    
     let dictionaryURL = Bundle.main.url(forResource: "dictionary", withExtension: "txt")!
     let dictionary = try! String(contentsOf: dictionaryURL)
     trie = Trie()
@@ -19,11 +24,16 @@ class Solver {
   }
     
   func findAllWords(board: GameBoard) -> Set<String> {
+    validWords = []
+    
     for x in 0..<board.size {
       for y in 0..<board.size {
         search(board: board, x: x, y: y)
       }
     }
+    
+    print("Found \(validWords) words")
+    
     return validWords
   }
     

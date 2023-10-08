@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		C8450D5C2ACF692900A1E582 /* iosevkaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D5B2ACF692900A1E582 /* iosevkaApp.swift */; };
-		C8450D5E2ACF692900A1E582 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D5D2ACF692900A1E582 /* ContentView.swift */; };
 		C8450D602ACF692B00A1E582 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8450D5F2ACF692B00A1E582 /* Assets.xcassets */; };
 		C8450D632ACF692B00A1E582 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8450D622ACF692B00A1E582 /* Preview Assets.xcassets */; };
 		C8450D6D2ACF692B00A1E582 /* iosevkaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D6C2ACF692B00A1E582 /* iosevkaTests.swift */; };
@@ -21,6 +20,8 @@
 		C894D4A22ACF799600C3739C /* GameBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D4A12ACF799600C3739C /* GameBoardView.swift */; };
 		C894D4A52ACFC60200C3739C /* ObservableStore in Frameworks */ = {isa = PBXBuildFile; productRef = C894D4A42ACFC60200C3739C /* ObservableStore */; };
 		C894D4A72ACFC79C00C3739C /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D4A62ACFC79C00C3739C /* GameState.swift */; };
+		C894D4A92AD0AB3600C3739C /* SwipeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D4A82AD0AB3600C3739C /* SwipeState.swift */; };
+		C8A64EBC2AD372D900F1617E /* dictionary.txt in Resources */ = {isa = PBXBuildFile; fileRef = C8A64EBB2AD372D900F1617E /* dictionary.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,7 +44,6 @@
 /* Begin PBXFileReference section */
 		C8450D582ACF692900A1E582 /* iosevka.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosevka.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8450D5B2ACF692900A1E582 /* iosevkaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iosevkaApp.swift; sourceTree = "<group>"; };
-		C8450D5D2ACF692900A1E582 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C8450D5F2ACF692B00A1E582 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C8450D622ACF692B00A1E582 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C8450D682ACF692B00A1E582 /* iosevkaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iosevkaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,6 +57,8 @@
 		C8450D8D2ACF722C00A1E582 /* Solver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solver.swift; sourceTree = "<group>"; };
 		C894D4A12ACF799600C3739C /* GameBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardView.swift; sourceTree = "<group>"; };
 		C894D4A62ACFC79C00C3739C /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		C894D4A82AD0AB3600C3739C /* SwipeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeState.swift; sourceTree = "<group>"; };
+		C8A64EBB2AD372D900F1617E /* dictionary.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dictionary.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,8 +110,8 @@
 		C8450D5A2ACF692900A1E582 /* iosevka */ = {
 			isa = PBXGroup;
 			children = (
+				C8A64EBB2AD372D900F1617E /* dictionary.txt */,
 				C8450D5B2ACF692900A1E582 /* iosevkaApp.swift */,
-				C8450D5D2ACF692900A1E582 /* ContentView.swift */,
 				C8450D5F2ACF692B00A1E582 /* Assets.xcassets */,
 				C8450D612ACF692B00A1E582 /* Preview Content */,
 				C8450D852ACF694400A1E582 /* Trie.swift */,
@@ -117,6 +119,7 @@
 				C8450D8D2ACF722C00A1E582 /* Solver.swift */,
 				C894D4A12ACF799600C3739C /* GameBoardView.swift */,
 				C894D4A62ACFC79C00C3739C /* GameState.swift */,
+				C894D4A82AD0AB3600C3739C /* SwipeState.swift */,
 			);
 			path = iosevka;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C8A64EBC2AD372D900F1617E /* dictionary.txt in Resources */,
 				C8450D632ACF692B00A1E582 /* Preview Assets.xcassets in Resources */,
 				C8450D602ACF692B00A1E582 /* Assets.xcassets in Resources */,
 			);
@@ -286,7 +290,7 @@
 				C8450D8E2ACF722C00A1E582 /* Solver.swift in Sources */,
 				C8450D8A2ACF6A8500A1E582 /* GameBoard.swift in Sources */,
 				C8450D862ACF694400A1E582 /* Trie.swift in Sources */,
-				C8450D5E2ACF692900A1E582 /* ContentView.swift in Sources */,
+				C894D4A92AD0AB3600C3739C /* SwipeState.swift in Sources */,
 				C894D4A72ACFC79C00C3739C /* GameState.swift in Sources */,
 				C894D4A22ACF799600C3739C /* GameBoardView.swift in Sources */,
 				C8450D5C2ACF692900A1E582 /* iosevkaApp.swift in Sources */,
