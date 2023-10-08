@@ -32,7 +32,7 @@ class Solver {
       }
     }
     
-    print("Found \(validWords) words")
+    print("Found \(Array(validWords).sorted()) words")
     
     return validWords
   }
