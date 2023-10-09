@@ -10,7 +10,7 @@ struct GameBoardView: View {
         ForEach(gameBoard.letters.indices, id: \.self) { row in
           HStack(spacing: 0) {
             ForEach(gameBoard.letters[row].indices, id: \.self) { col in
-              CellView(letter: gameBoard.letters[row][col])
+              CellView(coordinate: BoardCoordinate(x: row, y: col), letter: gameBoard.letters[row][col])
                 .frame(width: geometry.size.width / CGFloat(gameBoard.size),
                        height: geometry.size.height / CGFloat(gameBoard.size))
             }
@@ -25,6 +25,7 @@ struct GameBoardView: View {
 }
 
 struct CellView: View {
+  let coordinate: BoardCoordinate
   let letter: Character
 
   var body: some View {

@@ -44,10 +44,10 @@ func randomLetter() -> Character {
     }
   }
 
-  return "^" // This line should never be reached, but is included for safety
+  return "#" // This line should never be reached, but is included for safety
 }
 
-struct Position: Equatable { var x: Int; var y: Int }
+struct BoardCoordinate: Equatable { var x: Int; var y: Int }
 
 struct GameBoard {
   let size: Int
@@ -60,7 +60,7 @@ struct GameBoard {
     }
   }
 
-  subscript(position: Position) -> Character? {
+  subscript(position: BoardCoordinate) -> Character? {
     guard position.x >= 0, position.x < size else { return nil }
     guard position.y >= 0, position.y < size else { return nil }
 
@@ -69,18 +69,18 @@ struct GameBoard {
 }
 
 extension GameBoard {
-  func neighbors(of position: Position) -> [Position] {
+  func neighbors(of position: BoardCoordinate) -> [BoardCoordinate] {
     let dx = [-1, -1, -1, 0, 1, 1, 1, 0]
     let dy = [-1, 0, 1, 1, 1, 0, -1, -1]
 
-    var neighbors: [Position] = []
+    var neighbors: [BoardCoordinate] = []
 
     for i in 0..<dx.count {
       let newX = position.x + dx[i]
       let newY = position.y + dy[i]
 
       if newX >= 0, newX < size, newY >= 0, newY < size {
-        neighbors.append(Position(x: newX, y: newY))
+        neighbors.append(BoardCoordinate(x: newX, y: newY))
       }
     }
 

@@ -3,14 +3,14 @@ import ObservableStore
 
 enum GameAction {
   case newGame
-  case selectLetter(position: Position)
+  case selectLetter(position: BoardCoordinate)
   case submitWord
 }
 
 struct GameState: ModelProtocol {
   var gameBoard: GameBoard
   var solver: Solver = .init()
-  var selectedCells: [Position] = []
+  var selectedCells: [BoardCoordinate] = []
   var foundWords: [String] = []
   var possibleWords: Set<String> = []
 
@@ -34,6 +34,7 @@ struct GameState: ModelProtocol {
       let gameBoard = GameBoard(size: 4)
 
       draft.gameBoard = gameBoard
+      print(gameBoard)
       draft.possibleWords = state.solver.findAllWords(board: gameBoard)
 
     case .selectLetter(let position):

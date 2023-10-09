@@ -45,7 +45,7 @@ class Solver {
       guard x >= 0, x < board.size, y >= 0, y < board.size else { return }
       guard !visited[x][y] else { return }
             
-      if let letter = board[Position(x: x, y: y)] {
+      if let letter = board[BoardCoordinate(x: x, y: y)] {
         let newWord = currentWord + String(letter)
                 
         if trie.contains(word: newWord) {
@@ -61,7 +61,7 @@ class Solver {
         currentWord = newWord
                 
         // Use the neighbours function to get adjacent positions
-        let adjacentPositions = board.neighbors(of: Position(x: x, y: y))
+        let adjacentPositions = board.neighbors(of: BoardCoordinate(x: x, y: y))
                     
         for pos in adjacentPositions {
           dfs(x: pos.x, y: pos.y)

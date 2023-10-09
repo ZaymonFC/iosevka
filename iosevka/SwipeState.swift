@@ -7,13 +7,13 @@ typealias GameDispatch = (GameAction) -> Void
 enum SwipeAction {
   case dragStart(CGPoint)
   case positionUpdated(CGPoint)
-  case tileHovered(tile: Position, bound: Bounds)
+  case tileHovered(tile: BoardCoordinate, bound: Bounds)
   case dragStop(CGPoint)
 }
 
 struct SwipeState: ModelProtocol {
   var swipe: [CGPoint]
-  var previousTile: (tile: Position, bounds: Bounds)?
+  var previousTile: (tile: BoardCoordinate, bounds: Bounds)?
   var gameBoard: GameBoard
   var dispatch: GameDispatch
 
