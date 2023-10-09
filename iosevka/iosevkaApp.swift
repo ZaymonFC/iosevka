@@ -20,7 +20,12 @@ struct AppView: View {
 
   var body: some View {
     VStack {
-      GameBoardView(gameBoard: store.state.gameBoard)
+      GameBoardView(
+        gameBoard: store.state.gameBoard,
+        selected: store.state.selectedCells,
+        dispatch: store.send
+      )
+
       Button("New Game") { store.send(.newGame) }
     }
   }

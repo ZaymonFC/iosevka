@@ -26,6 +26,8 @@ struct GameState: ModelProtocol {
   ) -> Update<GameState> {
     var draft = state
 
+    print(action)
+
     switch action {
     case .newGame:
       draft.selectedCells.removeAll()

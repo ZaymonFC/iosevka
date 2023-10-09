@@ -1,3 +1,4 @@
+import Combine
 import ObservableStore
 import SwiftUI
 
@@ -5,96 +6,89 @@ typealias Bounds = (topLeft: CGPoint, bottomRight: CGPoint)
 typealias GameDispatch = (GameAction) -> Void
 
 enum SwipeAction {
+  case registerTile(tile: BoardCoordinate, bound: Bounds)
   case dragStart(CGPoint)
   case positionUpdated(CGPoint)
-  case tileHovered(tile: BoardCoordinate, bound: Bounds)
   case dragStop(CGPoint)
 }
 
-struct SwipeState: ModelProtocol {
-  var swipe: [CGPoint]
-  var previousTile: (tile: BoardCoordinate, bounds: Bounds)?
+class SwipeState: ObservableObject {
+  var cancellableSet: Set<AnyCancellable> = []
+
+  private var action$ = PassthroughSubject<SwipeAction, Never>()
   var gameBoard: GameBoard
   var dispatch: GameDispatch
 
-  init(dispatch: @escaping GameDispatch, gameBoard: GameBoard) {
-    swipe = []
-    previousTile = nil
-    self.dispatch = dispatch
+  var tileRegistry: [(BoardCoordinate, Bounds)] = []
+
+  var swipe: [CGPoint] = []
+  var previousTile: BoardCoordinate?
+
+  init(gameBoard: GameBoard, dispatch: @escaping GameDispatch) {
     self.gameBoard = gameBoard
+    self.dispatch = dispatch
+
+    initPublishers()
   }
 
-  static func update(
-    state: SwipeState,
-    action: SwipeAction,
-    environment: Void
-  ) -> Update<SwipeState> {
-    var draft = state
+  func send(_ action: SwipeAction) {
+    action$.send(action)
+  }
+
+  func initPublishers() {
+    action$
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] action in self?.handleAction(action) }
+      .store(in: &cancellableSet)
+  }
+
+  func handleAction(_ action: SwipeAction) {
+    print(action)
 
     switch action {
-    case .dragStart(let position):
-      draft.swipe = [position]
+    case .registerTile(let coordinate, let bounds):
+      print("Registering tile: \(coordinate) \(bounds)")
+      tileRegistry.append((coordinate, bounds))
+
+    case .dragStart:
+      swipe = []
+      previousTile = nil
 
     case .positionUpdated(let position):
-      draft.swipe.append(position)
+      let tile = tileRegistry.first { _, bounds in
+        let isInside = position.x >= bounds.topLeft.x
+          && position.x <= bounds.bottomRight.x
+          && position.y >= bounds.topLeft.y
+          && position.y <= bounds.bottomRight.y
 
-    case .tileHovered(let tile, let bounds):
-
-      // First tile
-      guard let (previousTile, previousBounds) = draft.previousTile else {
-        draft.previousTile = (tile, bounds)
-
-        return Update(state: draft)
+        return isInside
       }
 
-      // If the next tile is not a neighbour of the last tile, then return
-      let neighbours = draft.gameBoard.neighbors(of: previousTile)
-      guard neighbours.contains(tile) else { return Update(state: draft) }
+      // Make sure we found a tile
+      guard let (tileCoordinate, _) = tile else { return }
 
-      // Find the latest point in the swipe path inside the bounds
-      let latestPoint = draft.swipe.last!
+      print("Found Tile")
 
-      // Search for the last point in the previous bounds
-      let lastPointInPreviousTile = draft.swipe.reversed().first { point in
-        point.x < previousBounds.topLeft.x
-          || point.x > previousBounds.bottomRight.x
-          || point.y < previousBounds.topLeft.y
-          || point.y > previousBounds.bottomRight.y
+      guard let previous = previousTile else {
+        print("Guard all the way down, \(String(describing: previousTile))")
+
+        print("Setting previousTile to \(tileCoordinate)")
+        previousTile = tileCoordinate
+        print("previousTile is now \(String(describing: previousTile))")
+
+        dispatch(.selectLetter(position: tileCoordinate))
+        return
       }
 
-      // Calculate the (ideal) straight line angle between previous tile and new tile
-      let tileAngle = atan2(
-        Double(tile.y - previousTile.y),
-        Double(tile.x - previousTile.x)
-      )
+      // Make sure the tile is not the previous tile
+      guard tileCoordinate != previous else { return }
 
-      let swipeAngle = atan2(
-        Double(latestPoint.y - lastPointInPreviousTile!.y),
-        Double(latestPoint.x - lastPointInPreviousTile!.x)
-      )
-
-      let threshold = 10.0
-
-      if abs(swipeAngle - tileAngle) < threshold {
-        draft.previousTile = (tile, bounds)
-        state.dispatch(GameAction.selectLetter(position: tile))
-      }
-
-      return Update(state: draft)
+      previousTile = tileCoordinate
+      dispatch(.selectLetter(position: tileCoordinate))
 
     case .dragStop:
-      state.dispatch(GameAction.submitWord)
-
-      draft.swipe = []
+      dispatch(.submitWord)
+      swipe = []
     }
-
-    return Update(state: draft)
-  }
-}
-
-extension SwipeState: Equatable {
-  static func == (lhs: SwipeState, rhs: SwipeState) -> Bool {
-    return lhs.swipe == rhs.swipe
-      && lhs.previousTile?.tile == rhs.previousTile?.tile
   }
 }
