@@ -93,3 +93,10 @@ extension GameBoard: Equatable {
     return lhs.letters == rhs.letters
   }
 }
+
+func cardinalAngle(_ a: BoardCoordinate, _ b: BoardCoordinate) -> Double {
+  let dx = Double(a.y - b.y)
+  let dy = Double(a.x - b.x)
+
+  return atan2(dy, dx)
+}

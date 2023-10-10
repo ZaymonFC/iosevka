@@ -9,6 +9,7 @@ struct GameBoardView: View {
   let dispatch: GameDispatch
 
   @State var swipeState: SwipeState
+  @State var isDragging = false
 
   init(gameBoard: GameBoard, selected: [BoardCoordinate], dispatch: @escaping GameDispatch) {
     self.gameBoard = gameBoard
@@ -46,11 +47,15 @@ struct GameBoardView: View {
       .gesture(
         DragGesture()
           .onChanged { value in
-            swipeState.send(.dragStart(value.startLocation))
+            if !isDragging {
+              isDragging = true
+              swipeState.send(.dragStart(value.startLocation))
+            }
             swipeState.send(.positionUpdated(value.location))
           }
           .onEnded { value in
             swipeState.send(.dragStop(value.location))
+            isDragging = false
           }
       )
       .coordinateSpace(name: "BoardGeometry")
