@@ -1,6 +1,18 @@
 import Foundation
 import ObservableStore
 
+// -- Domain ------------------------------------------------------------------
+let wordPoints: [Int: Int] = [
+  3: 1, 4: 1, 5: 2,
+  6: 3, 7: 5, 8: 8,
+  9: 13, 10: 21, 11: 34,
+  12: 55, 13: 89, 14: 144,
+  15: 233, 16: 377, 17: 610,
+  18: 987, 19: 1597, 20: 2584,
+  21: 4181, 22: 6765, 23: 10946,
+  24: 17711, 25: 28657, 26: 46368
+]
+
 enum GameAction {
   case newGame
   case selectLetter(position: BoardCoordinate)
@@ -13,6 +25,8 @@ struct GameState: ModelProtocol {
   var selectedCells: [BoardCoordinate] = []
   var foundWords: [String] = []
   var possibleWords: Set<String> = []
+
+  var score: Int = 0
 
   init() {
     gameBoard = GameBoard(size: 4)
@@ -36,8 +50,8 @@ struct GameState: ModelProtocol {
       let gameBoard = GameBoard(size: 4)
 
       draft.gameBoard = gameBoard
-      print(gameBoard)
       draft.possibleWords = state.solver.findAllWords(board: gameBoard)
+      draft.score = 0
 
     case .selectLetter(let position):
       // Check that the new position is a neighbour of the last selection
@@ -58,13 +72,14 @@ struct GameState: ModelProtocol {
         word + String(draft.gameBoard[position]!)
       }
 
-      if draft.possibleWords.contains(word) { draft.foundWords.append(word) }
-
-      // Indicate success
+      if !draft.foundWords.contains(word) {
+        if draft.possibleWords.contains(word) {
+          draft.foundWords.append(word)
+          draft.score += wordPoints[word.count] ?? 0
+        }
+      }
 
       draft.selectedCells.removeAll()
-
-      // Indicate Failure
     }
 
     return Update(state: draft)
@@ -78,5 +93,6 @@ extension GameState: Equatable {
       && lhs.gameBoard == rhs.gameBoard
       && lhs.selectedCells == rhs.selectedCells
       && lhs.foundWords == rhs.foundWords
+      && lhs.score == rhs.score
   }
 }

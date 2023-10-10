@@ -12,6 +12,18 @@ struct iosevkaApp: App {
   }
 }
 
+struct ScoreView: View {
+  var gameState: GameState
+
+  var body: some View {
+    HStack {
+      Text("Found words \(gameState.foundWords.count) / \(gameState.possibleWords.count)")
+      Spacer()
+      Text("Score \(gameState.score)")
+    }.padding(8)
+  }
+}
+
 struct AppView: View {
   @StateObject var store = Store(
     state: GameState(),
@@ -20,6 +32,7 @@ struct AppView: View {
 
   var body: some View {
     VStack {
+      ScoreView(gameState: store.state)
       GameBoardView(
         gameBoard: store.state.gameBoard,
         selected: store.state.selectedCells,
