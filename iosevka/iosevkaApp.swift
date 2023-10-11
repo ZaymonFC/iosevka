@@ -16,11 +16,16 @@ struct ScoreView: View {
   var gameState: GameState
 
   var body: some View {
-    HStack {
-      Text("Found words \(gameState.foundWords.count) / \(gameState.possibleWords.count)")
+    VStack {
+      HStack {
+        Text("Found words \(gameState.foundWords.count) / \(gameState.possibleWords.count)")
+        Spacer()
+        Text("Score \(gameState.score) / \(gameState.possibleScore)")
+      }
       Spacer()
-      Text("Score \(gameState.score)")
-    }.padding(8)
+      Text(gameState.foundWords.joined(separator: " "))
+    }
+    .padding(8)
   }
 }
 

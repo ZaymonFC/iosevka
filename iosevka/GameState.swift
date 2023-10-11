@@ -13,6 +13,10 @@ let wordPoints: [Int: Int] = [
   24: 17711, 25: 28657, 26: 46368
 ]
 
+func calculatePossibleScore(_ words: Set<String>) -> Int {
+  words.reduce(0) { $0 + wordPoints[$1.count, default: 0] }
+}
+
 enum GameAction {
   case newGame
   case selectLetter(position: BoardCoordinate)
@@ -26,11 +30,13 @@ struct GameState: ModelProtocol {
   var foundWords: [String] = []
   var possibleWords: Set<String> = []
 
+  var possibleScore: Int
   var score: Int = 0
 
   init() {
     gameBoard = GameBoard(size: 4)
     possibleWords = solver.findAllWords(board: gameBoard)
+    possibleScore = calculatePossibleScore(possibleWords)
   }
 
   static func update(
@@ -51,6 +57,7 @@ struct GameState: ModelProtocol {
 
       draft.gameBoard = gameBoard
       draft.possibleWords = state.solver.findAllWords(board: gameBoard)
+      draft.possibleScore = calculatePossibleScore(draft.possibleWords)
       draft.score = 0
 
     case .selectLetter(let position):
