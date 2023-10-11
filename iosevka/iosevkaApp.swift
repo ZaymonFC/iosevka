@@ -1,6 +1,16 @@
 import ObservableStore
 import SwiftUI
 
+enum AppAction {
+  case newGame
+  case mainMenu
+}
+
+enum AppState {
+  case mainMenu
+  case game
+}
+
 struct AppEnvironment {}
 
 @main
@@ -29,11 +39,13 @@ struct ScoreView: View {
   }
 }
 
-struct AppView: View {
+struct GameView: View {
   @StateObject var store = Store(
     state: GameState(),
     environment: AppEnvironment()
   )
+
+  var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
   var body: some View {
     VStack {
@@ -43,8 +55,30 @@ struct AppView: View {
         selected: store.state.selectedCells,
         dispatch: store.send
       )
+    }
+  }
+}
 
-      Button("New Game") { store.send(.newGame) }
+struct AppView: View {
+  @State var appState = AppState.mainMenu
+
+  func dispatch(_ action: AppAction) {
+    switch action {
+    case .newGame: appState = AppState.game
+    case .mainMenu: appState = AppState.mainMenu
+    }
+  }
+
+  var body: some View {
+    switch appState {
+    case .mainMenu: MenuView(dispatch: dispatch).fadeIn()
+    case .game:
+      VStack {
+        GameView()
+        Button("Main Menu") {
+          dispatch(.mainMenu)
+        }
+      }.fadeIn()
     }
   }
 }
@@ -52,25 +86,5 @@ struct AppView: View {
 struct AppView_Previews: PreviewProvider {
   static var previews: some View {
     AppView().fadeIn()
-  }
-}
-
-struct FadeIn: ViewModifier {
-  @State private var opacity: Double = 0
-
-  func body(content: Content) -> some View {
-    content
-      .opacity(opacity)
-      .onAppear {
-        withAnimation(.easeIn(duration: 0.2)) {
-          opacity = 1
-        }
-      }
-  }
-}
-
-extension View {
-  func fadeIn() -> some View {
-    modifier(FadeIn())
   }
 }

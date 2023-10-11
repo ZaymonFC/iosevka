@@ -24,6 +24,7 @@ enum GameAction {
 }
 
 struct GameState: ModelProtocol {
+  var gameId: UUID
   var gameBoard: GameBoard
   var solver: Solver = .init()
   var selectedCells: [BoardCoordinate] = []
@@ -34,6 +35,7 @@ struct GameState: ModelProtocol {
   var score: Int = 0
 
   init() {
+    gameId = UUID()
     gameBoard = GameBoard(size: 4)
     possibleWords = solver.findAllWords(board: gameBoard)
     possibleScore = calculatePossibleScore(possibleWords)
@@ -50,12 +52,14 @@ struct GameState: ModelProtocol {
 
     switch action {
     case .newGame:
-      draft.selectedCells.removeAll()
-      draft.foundWords.removeAll()
+      draft.gameId = UUID()
+
+      draft.selectedCells = []
+      draft.foundWords = []
 
       let gameBoard = GameBoard(size: 4)
-
       draft.gameBoard = gameBoard
+
       draft.possibleWords = state.solver.findAllWords(board: gameBoard)
       draft.possibleScore = calculatePossibleScore(draft.possibleWords)
       draft.score = 0

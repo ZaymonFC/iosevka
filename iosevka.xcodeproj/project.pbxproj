@@ -21,6 +21,8 @@
 		C894D4A52ACFC60200C3739C /* ObservableStore in Frameworks */ = {isa = PBXBuildFile; productRef = C894D4A42ACFC60200C3739C /* ObservableStore */; };
 		C894D4A72ACFC79C00C3739C /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D4A62ACFC79C00C3739C /* GameState.swift */; };
 		C894D4A92AD0AB3600C3739C /* SwipeState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D4A82AD0AB3600C3739C /* SwipeState.swift */; };
+		C899EB8E2AD74A3C00378B32 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C899EB8D2AD74A3C00378B32 /* MenuView.swift */; };
+		C899EB902AD74E8800378B32 /* FadeIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C899EB8F2AD74E8800378B32 /* FadeIn.swift */; };
 		C8A64EBC2AD372D900F1617E /* dictionary.txt in Resources */ = {isa = PBXBuildFile; fileRef = C8A64EBB2AD372D900F1617E /* dictionary.txt */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +60,8 @@
 		C894D4A12ACF799600C3739C /* GameBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardView.swift; sourceTree = "<group>"; };
 		C894D4A62ACFC79C00C3739C /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		C894D4A82AD0AB3600C3739C /* SwipeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeState.swift; sourceTree = "<group>"; };
+		C899EB8D2AD74A3C00378B32 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		C899EB8F2AD74E8800378B32 /* FadeIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeIn.swift; sourceTree = "<group>"; };
 		C8A64EBB2AD372D900F1617E /* dictionary.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dictionary.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -120,6 +124,8 @@
 				C894D4A12ACF799600C3739C /* GameBoardView.swift */,
 				C894D4A62ACFC79C00C3739C /* GameState.swift */,
 				C894D4A82AD0AB3600C3739C /* SwipeState.swift */,
+				C899EB8D2AD74A3C00378B32 /* MenuView.swift */,
+				C899EB8F2AD74E8800378B32 /* FadeIn.swift */,
 			);
 			path = iosevka;
 			sourceTree = "<group>";
@@ -293,7 +299,9 @@
 				C894D4A92AD0AB3600C3739C /* SwipeState.swift in Sources */,
 				C894D4A72ACFC79C00C3739C /* GameState.swift in Sources */,
 				C894D4A22ACF799600C3739C /* GameBoardView.swift in Sources */,
+				C899EB8E2AD74A3C00378B32 /* MenuView.swift in Sources */,
 				C8450D5C2ACF692900A1E582 /* iosevkaApp.swift in Sources */,
+				C899EB902AD74E8800378B32 /* FadeIn.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
