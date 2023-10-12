@@ -14,6 +14,8 @@ let wordPoints: [Int: Int] = [
   24: 17711, 25: 28657, 26: 46368
 ]
 
+let timeLimit: Int = 90
+
 func calculatePossibleScore(_ words: Set<String>) -> Int {
   words.reduce(0) { $0 + wordPoints[$1.count, default: 0] }
 }
@@ -35,7 +37,7 @@ struct GameState: ModelProtocol {
   var foundWords: [String] = []
   var possibleWords: Set<String> = []
 
-  var timeRemaining: Int = 10
+  var timeRemaining: Int = timeLimit
 
   var possibleScore: Int
   var score: Int = 0
@@ -71,7 +73,7 @@ struct GameState: ModelProtocol {
       draft.score = 0
 
       // Start the timer ticking
-      return update(state: draft, action: .tickTimer(10), environment: environment)
+      return update(state: draft, action: .tickTimer(timeLimit), environment: environment)
 
     case let .selectLetter(position):
       var draft = state
@@ -100,11 +102,11 @@ struct GameState: ModelProtocol {
         word + String(draft.gameBoard[position]!)
       }
 
-      if !draft.foundWords.contains(word) {
-        if draft.possibleWords.contains(word) {
+      if !draft.foundWords.contains(word) 
+          && draft.possibleWords.contains(word) {
+        
           draft.foundWords.append(word)
           draft.score += wordPoints[word.count] ?? 0
-        }
       }
 
       draft.selectedCells = []
@@ -139,13 +141,3 @@ struct GameState: ModelProtocol {
   }
 }
 
-extension GameState: Equatable {
-  static func == (lhs: GameState, rhs: GameState) -> Bool {
-    return lhs.gameBoard == rhs.gameBoard
-      && lhs.solver == rhs.solver
-      && lhs.gameBoard == rhs.gameBoard
-      && lhs.selectedCells == rhs.selectedCells
-      && lhs.foundWords == rhs.foundWords
-      && lhs.score == rhs.score
-  }
-}

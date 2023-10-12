@@ -43,7 +43,7 @@ struct GameBoardView: View {
           }
         }
       }
-      .border(Color.black, width: 0.5) // Add an external border
+      .border(Color.accentColor, width: 0.5) // Add an external border
       .gesture(
         DragGesture()
           .onChanged { value in
@@ -77,7 +77,7 @@ struct CellView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(
           Rectangle()
-            .stroke(Color.black, lineWidth: 0.5)
+            .stroke(Color.accentColor, lineWidth: 0.5)
             .padding(.top, 0.5)
             .padding(.leading, 0.5)
         )
