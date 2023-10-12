@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import ObservableStore
 
@@ -18,9 +19,11 @@ func calculatePossibleScore(_ words: Set<String>) -> Int {
 }
 
 enum GameAction {
-  case newGame
+  case appear
   case selectLetter(position: BoardCoordinate)
   case submitWord
+  case tickTimer(_ remainingTime: Int)
+  case gameOver
 }
 
 struct GameState: ModelProtocol {
@@ -28,8 +31,11 @@ struct GameState: ModelProtocol {
   var gameBoard: GameBoard
   var solver: Solver = .init()
   var selectedCells: [BoardCoordinate] = []
+  var selection: [Character] = []
   var foundWords: [String] = []
   var possibleWords: Set<String> = []
+
+  var timeRemaining: Int = 10
 
   var possibleScore: Int
   var score: Int = 0
@@ -46,15 +52,15 @@ struct GameState: ModelProtocol {
     action: GameAction,
     environment: AppEnvironment
   ) -> Update<GameState> {
-    var draft = state
-
     print(action)
 
     switch action {
-    case .newGame:
+    case .appear:
+      var draft = state
       draft.gameId = UUID()
 
       draft.selectedCells = []
+      draft.selection = []
       draft.foundWords = []
 
       let gameBoard = GameBoard(size: 4)
@@ -64,10 +70,16 @@ struct GameState: ModelProtocol {
       draft.possibleScore = calculatePossibleScore(draft.possibleWords)
       draft.score = 0
 
-    case .selectLetter(let position):
+      // Start the timer ticking
+      return update(state: draft, action: .tickTimer(10), environment: environment)
+
+    case let .selectLetter(position):
+      var draft = state
+
       // Check that the new position is a neighbour of the last selection
       guard let lastPosition = draft.selectedCells.last else {
         draft.selectedCells.append(position)
+        draft.selection.append(draft.gameBoard[position] ?? "?")
         return Update(state: draft)
       }
 
@@ -76,8 +88,13 @@ struct GameState: ModelProtocol {
       guard neighbours.contains(position) else { return Update(state: draft) }
 
       draft.selectedCells.append(position)
+      draft.selection.append(draft.gameBoard[position] ?? "?")
+
+      return Update(state: draft)
 
     case .submitWord:
+      var draft = state
+
       // Convert selected cells to a word and add to submittedWords
       let word = draft.selectedCells.reduce("") { word, position in
         word + String(draft.gameBoard[position]!)
@@ -90,10 +107,35 @@ struct GameState: ModelProtocol {
         }
       }
 
-      draft.selectedCells.removeAll()
-    }
+      draft.selectedCells = []
+      draft.selection = []
+      return Update(state: draft)
 
-    return Update(state: draft)
+    case let .tickTimer(timeRemaining):
+      var draft = state
+
+      draft.timeRemaining = timeRemaining
+
+      if draft.timeRemaining == 0 {
+        return update(state: draft, action: .gameOver, environment: environment)
+
+      } else {
+        let fx: Fx<GameAction> = Future {
+          try await Task.sleep(nanoseconds: 1000000000)
+
+          return .tickTimer(draft.timeRemaining - 1)
+        }.catch { _ in
+          Just(GameAction.appear)
+        }.eraseToAnyPublisher()
+
+        return Update(state: draft, fx: fx)
+      }
+
+    case .gameOver:
+      print("Games over boy")
+
+      return Update(state: state)
+    }
   }
 }
 

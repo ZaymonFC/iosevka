@@ -29,13 +29,32 @@ struct ScoreView: View {
     VStack {
       HStack {
         Text("Found words \(gameState.foundWords.count) / \(gameState.possibleWords.count)")
-        Spacer()
+        Text("Time: \(gameState.timeRemaining)s")
         Text("Score \(gameState.score) / \(gameState.possibleScore)")
       }
-      Spacer()
       Text(gameState.foundWords.joined(separator: " "))
     }
     .padding(8)
+  }
+}
+
+struct SelectionView: View {
+  var selection: [Character]
+
+  var body: some View {
+    if selection.isEmpty {
+      return AnyView(HStack {})
+    } else {
+      return AnyView(
+        HStack(spacing: -1) {
+          ForEach(selection, id: \.self) { letter in
+            Text(String(letter))
+              .frame(width: 30, height: 30)
+              .border(Color.black, width: 1)
+          }
+        }
+      )
+    }
   }
 }
 
@@ -45,17 +64,17 @@ struct GameView: View {
     environment: AppEnvironment()
   )
 
-  var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
   var body: some View {
     VStack {
       ScoreView(gameState: store.state)
+//      SelectionView(selection: store.state.selection)
       GameBoardView(
         gameBoard: store.state.gameBoard,
         selected: store.state.selectedCells,
         dispatch: store.send
       )
-    }
+
+    }.onAppear { store.send(GameAction.appear) }
   }
 }
 
@@ -71,13 +90,11 @@ struct AppView: View {
 
   var body: some View {
     switch appState {
-    case .mainMenu: MenuView(dispatch: dispatch).fadeIn()
+    case .mainMenu: MenuView(dispatch: dispatch)
     case .game:
       VStack {
         GameView()
-        Button("Main Menu") {
-          dispatch(.mainMenu)
-        }
+        Button("Main Menu") { dispatch(.mainMenu) }
       }.fadeIn()
     }
   }
