@@ -61,7 +61,7 @@ struct GameBoardView: View {
       .coordinateSpace(name: "BoardGeometry")
     }
     .aspectRatio(1, contentMode: .fit)
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//    .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
 }
 
