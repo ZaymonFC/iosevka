@@ -17,6 +17,7 @@
 		C8450D8A2ACF6A8500A1E582 /* GameBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D892ACF6A8500A1E582 /* GameBoard.swift */; };
 		C8450D8C2ACF6DF600A1E582 /* TrieTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D8B2ACF6DF600A1E582 /* TrieTests.swift */; };
 		C8450D8E2ACF722C00A1E582 /* Solver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8450D8D2ACF722C00A1E582 /* Solver.swift */; };
+		C88ABDCC2AD9C5F700FF82C5 /* ReadOnlyBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88ABDCB2AD9C5F700FF82C5 /* ReadOnlyBoardView.swift */; };
 		C894D4A22ACF799600C3739C /* GameBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D4A12ACF799600C3739C /* GameBoardView.swift */; };
 		C894D4A52ACFC60200C3739C /* ObservableStore in Frameworks */ = {isa = PBXBuildFile; productRef = C894D4A42ACFC60200C3739C /* ObservableStore */; };
 		C894D4A72ACFC79C00C3739C /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C894D4A62ACFC79C00C3739C /* GameState.swift */; };
@@ -58,6 +59,7 @@
 		C8450D892ACF6A8500A1E582 /* GameBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoard.swift; sourceTree = "<group>"; };
 		C8450D8B2ACF6DF600A1E582 /* TrieTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrieTests.swift; sourceTree = "<group>"; };
 		C8450D8D2ACF722C00A1E582 /* Solver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solver.swift; sourceTree = "<group>"; };
+		C88ABDCB2AD9C5F700FF82C5 /* ReadOnlyBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadOnlyBoardView.swift; sourceTree = "<group>"; };
 		C894D4A12ACF799600C3739C /* GameBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardView.swift; sourceTree = "<group>"; };
 		C894D4A62ACFC79C00C3739C /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		C894D4A82AD0AB3600C3739C /* SwipeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeState.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				C8C7195A2AD8750700D1D6D9 /* GameView.swift */,
 				C899EB8D2AD74A3C00378B32 /* MenuView.swift */,
 				C899EB8F2AD74E8800378B32 /* FadeIn.swift */,
+				C88ABDCB2AD9C5F700FF82C5 /* ReadOnlyBoardView.swift */,
 			);
 			path = iosevka;
 			sourceTree = "<group>";
@@ -298,6 +301,7 @@
 			files = (
 				C8450D8E2ACF722C00A1E582 /* Solver.swift in Sources */,
 				C8450D8A2ACF6A8500A1E582 /* GameBoard.swift in Sources */,
+				C88ABDCC2AD9C5F700FF82C5 /* ReadOnlyBoardView.swift in Sources */,
 				C8450D862ACF694400A1E582 /* Trie.swift in Sources */,
 				C894D4A92AD0AB3600C3739C /* SwipeState.swift in Sources */,
 				C8C7195B2AD8750700D1D6D9 /* GameView.swift in Sources */,

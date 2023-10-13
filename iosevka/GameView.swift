@@ -45,7 +45,7 @@ struct WordView: View {
 
   var body: some View {
     HStack {
-      Text(word)
+      Text(word.uppercased())
       Spacer()
       Text("+\(scoreWord(word))")
     }.padding(.horizontal, 12)
@@ -53,7 +53,6 @@ struct WordView: View {
       .background(Color.accentColor)
       .foregroundColor(.white)
       .fontWeight(.semibold)
-      .textCase(.uppercase)
       .onTapGesture {
         onTapped(word)
       }
@@ -62,12 +61,15 @@ struct WordView: View {
 
 struct WordList: View {
   var words: [String]
+  var selectWord: (String) -> Void
 
   var body: some View {
     VStack(spacing: 2) {
       if words.count > 0 {
         ForEach(words, id: \.self) { word in
-          WordView(word: word, onTapped: { s in print("Tapped", s) })
+          WordView(word: word, onTapped: { word in
+            selectWord(word)
+          })
         }
       }
     }.frame(maxWidth: .infinity)
@@ -76,7 +78,7 @@ struct WordList: View {
 
 struct WordList_Previews: PreviewProvider {
   static var previews: some View {
-    WordList(words: ["ABC", "DEF", "GHI", "JKL"])
+    WordList(words: ["ABC", "DEF", "GHI", "JKL"], selectWord: { _ in })
   }
 }
 
@@ -85,6 +87,7 @@ struct SummaryView: View {
   var dispatch: (AppAction) -> Void
 
   let remainingWords: [String]
+  @State var selected: [BoardCoordinate] = []
 
   init(store: Store<GameState>, dispatch: @escaping (AppAction) -> Void) {
     self.store = store
@@ -95,32 +98,49 @@ struct SummaryView: View {
         .sorted(by: { x, y in scoreWord(x) > scoreWord(y) })
   }
 
+  func select(word: String) {
+    selected =
+      store.state.boardWords
+        .filter { boardWord in word == boardWord.word }
+        .randomElement()!
+        .path
+  }
+
   var body: some View {
     VStack {
       Text("Game Over").font(.largeTitle)
 
-      ScoreView(gameState: store.state)
-
-      Spacer()
-
       HStack {
-        Button("New Game") {
-          store.send(GameAction.appear)
-        }.buttonStyle(.borderedProminent)
         Button("Main Menu") {
           dispatch(.mainMenu)
         }.buttonStyle(.borderedProminent)
+        Button("New Game") {
+          store.send(GameAction.appear)
+        }.buttonStyle(.borderedProminent)
       }
+
+      ReadOnlyBoardView(gameBoard: store.state.gameBoard!, selected: selected)
+        .padding(12)
+        .frame(width: 200, height: 200)
+
+      VStack {
+        HStack {
+          Text("Words \(store.state.foundWords.count) / \(store.state.wordLookup.count)")
+          Spacer()
+          Text("Score \(store.state.score) / \(store.state.possibleScore)")
+        }.padding(.bottom, 12)
+      }.padding(12)
+
       TabView {
         ScrollView {
-          WordList(words: store.state.foundWords)
+          WordList(words: store.state.foundWords, selectWord: select)
         }.tabItem {
           Image(systemName: "text.justify")
-          Text("Found Words (2)")
+          Text("Found Words (\(store.state.foundWords.count))")
         }.tag(0)
 
         ScrollView {
-          WordList(words: remainingWords)
+          WordList(words: remainingWords, selectWord: select)
         }.tabItem {
           Image(systemName: "text.badge.plus")
           Text("Remaining Words \\(\(remainingWords.count)\\)")
