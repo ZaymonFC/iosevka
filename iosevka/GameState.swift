@@ -21,7 +21,7 @@ func calculatePossibleScore(_ words: Set<String>) -> Int {
   words.reduce(0) { $0 + wordPoints[$1.count, default: 0] }
 }
 
-enum GameAction {
+enum GameAction: Equatable {
   case appear
   case selectLetter(position: BoardCoordinate)
   case submitWord
@@ -35,9 +35,9 @@ enum StateOfTheGame {
 }
 
 struct GameState: ModelProtocol {
-  var gameId: UUID
+  var gameId: UUID?
+  var gameBoard: GameBoard?
   var stateOfTheGame: StateOfTheGame = .playing
-  var gameBoard: GameBoard
   var selectedCells: [BoardCoordinate] = []
   var selection: [Character] = []
   var foundWords: [String] = []
@@ -45,7 +45,7 @@ struct GameState: ModelProtocol {
 
   var timeRemaining: Int = timeLimit
 
-  var possibleScore: Int
+  var possibleScore: Int = 0
   var score: Int = 0
 
   static func update(
@@ -55,18 +55,25 @@ struct GameState: ModelProtocol {
   ) -> Update<GameState> {
     print(action)
 
+    guard state.gameBoard != nil || (state.gameBoard == nil && (action == GameAction.appear)) else {
+      print("BOARD NOT INITIALISED! Can't handle \(action)")
+      return Update(state: state)
+    }
+
     switch action {
     case .appear:
       var draft = state
+
       draft.gameId = UUID()
+
+      let gameBoard = GameBoard(size: 4)
+      draft.gameBoard = gameBoard
+
       draft.stateOfTheGame = .playing
 
       draft.selectedCells = []
       draft.selection = []
       draft.foundWords = []
-
-      let gameBoard = GameBoard(size: 4)
-      draft.gameBoard = gameBoard
 
       draft.possibleWords = Solver.shared.findAllWords(board: gameBoard)
       draft.possibleScore = calculatePossibleScore(draft.possibleWords)
@@ -81,16 +88,16 @@ struct GameState: ModelProtocol {
       // Check that the new position is a neighbour of the last selection
       guard let lastPosition = draft.selectedCells.last else {
         draft.selectedCells.append(position)
-        draft.selection.append(draft.gameBoard[position] ?? "?")
+        draft.selection.append(draft.gameBoard![position] ?? "?")
         return Update(state: draft)
       }
 
-      let neighbours = draft.gameBoard.neighbors(of: lastPosition)
+      let neighbours = draft.gameBoard!.neighbors(of: lastPosition)
 
       guard neighbours.contains(position) else { return Update(state: draft) }
 
       draft.selectedCells.append(position)
-      draft.selection.append(draft.gameBoard[position] ?? "?")
+      draft.selection.append(draft.gameBoard![position] ?? "?")
 
       return Update(state: draft)
 
@@ -99,7 +106,7 @@ struct GameState: ModelProtocol {
 
       // Convert selected cells to a word and add to submittedWords
       let word = draft.selectedCells.reduce("") { word, position in
-        word + String(draft.gameBoard[position]!)
+        word + String(draft.gameBoard![position]!)
       }
 
       if !draft.foundWords.contains(word)

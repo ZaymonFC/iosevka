@@ -39,21 +39,6 @@ struct SelectionView: View {
   }
 }
 
-struct BadgeView: View {
-  var value: Int
-
-  var body: some View {
-    ZStack {
-      Circle()
-        .foregroundColor(.red)
-        .frame(width: 20, height: 20)
-      Text("\(value)")
-        .foregroundColor(.white)
-        .font(Font.system(size: 12))
-    }
-  }
-}
-
 struct SummaryView: View {
   @ObservedObject var store: Store<GameState>
   var dispatch: (AppAction) -> Void
@@ -123,11 +108,14 @@ struct PlayingView: View {
       ScoreView(gameState: store.state)
       Spacer()
       SelectionView(selection: store.state.selection)
-      GameBoardView(
-        gameBoard: store.state.gameBoard,
-        selected: store.state.selectedCells,
-        dispatch: store.send
-      )
+      // Conditionally render GameBoardView if gameBoard is not nil
+      if let gameBoard = store.state.gameBoard {
+        GameBoardView(
+          gameBoard: gameBoard,
+          selected: store.state.selectedCells,
+          dispatch: store.send
+        )
+      }
     }.onAppear { store.send(GameAction.appear) }
   }
 }
