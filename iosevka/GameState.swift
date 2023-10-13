@@ -16,8 +16,7 @@ private let wordPoints: [Int: Int] = [
 
 func scoreWord(_ word: String) -> Int { wordPoints[word.count, default: 0] }
 
-// let timeLimit: Int = 60 * 3
-let timeLimit: Int = 5
+let timeLimit: Int = 6 * 30
 
 func calculatePossibleScore(_ words: Set<String>) -> Int {
   words.reduce(0) { acc, word in acc + scoreWord(word) }

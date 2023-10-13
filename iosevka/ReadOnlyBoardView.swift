@@ -47,7 +47,7 @@ struct ReadOnlyCellView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(
           Rectangle()
-            .stroke(Color.accentColor, lineWidth: 0.5)
+            .stroke(Color.accentColor, lineWidth: 1)
             .padding(.top, 0.5)
             .padding(.leading, 0.5)
         )

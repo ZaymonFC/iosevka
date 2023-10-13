@@ -168,6 +168,7 @@ struct PlayingView: View {
         )
       }
     }.onAppear { store.send(GameAction.appear) }
+    Spacer()
   }
 }
 
