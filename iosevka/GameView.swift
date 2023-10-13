@@ -39,9 +39,32 @@ struct SelectionView: View {
   }
 }
 
+struct BadgeView: View {
+  var value: Int
+
+  var body: some View {
+    ZStack {
+      Circle()
+        .foregroundColor(.red)
+        .frame(width: 20, height: 20)
+      Text("\(value)")
+        .foregroundColor(.white)
+        .font(Font.system(size: 12))
+    }
+  }
+}
+
 struct SummaryView: View {
   @ObservedObject var store: Store<GameState>
   var dispatch: (AppAction) -> Void
+
+  let remainingWords: [String]
+
+  init(store: Store<GameState>, dispatch: @escaping (AppAction) -> Void) {
+    self.store = store
+    self.dispatch = dispatch
+    self.remainingWords = store.state.possibleWords.subtracting(store.state.foundWords).sorted()
+  }
 
   var body: some View {
     VStack {
@@ -58,6 +81,35 @@ struct SummaryView: View {
         Button("Main Menu") {
           dispatch(.mainMenu)
         }.buttonStyle(.borderedProminent)
+      }
+      TabView {
+        ScrollView {
+          VStack {
+            if store.state.foundWords.count > 0 {
+              ForEach(store.state.foundWords, id: \.self) { word in
+                Text(word)
+              }
+            } else {
+              Text("No words found")
+            }
+          }.frame(maxWidth: .infinity)
+        }.tabItem {
+          Image(systemName: "text.justify")
+          Text("Found Words (2)")
+        }
+        .tag(0)
+
+        ScrollView {
+          VStack {
+            ForEach(remainingWords, id: \.self) { word in
+              Text(word)
+            }
+          }.frame(maxWidth: .infinity)
+        }.tabItem {
+          Image(systemName: "text.badge.plus")
+          Text("Remaining Words \\(\(remainingWords.count)\\)")
+        }
+        .tag(1)
       }
     }
   }
