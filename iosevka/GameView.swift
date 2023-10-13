@@ -39,6 +39,47 @@ struct SelectionView: View {
   }
 }
 
+struct WordView: View {
+  var word: String
+  var onTapped: (String) -> Void
+
+  var body: some View {
+    HStack {
+      Text(word)
+      Spacer()
+      Text("+\(scoreWord(word))")
+    }.padding(.horizontal, 12)
+      .padding(.vertical, 4)
+      .background(Color.accentColor)
+      .foregroundColor(.white)
+      .fontWeight(.semibold)
+      .textCase(.uppercase)
+      .onTapGesture {
+        onTapped(word)
+      }
+  }
+}
+
+struct WordList: View {
+  var words: [String]
+
+  var body: some View {
+    VStack(spacing: 2) {
+      if words.count > 0 {
+        ForEach(words, id: \.self) { word in
+          WordView(word: word, onTapped: { s in print("Tapped", s) })
+        }
+      }
+    }.frame(maxWidth: .infinity)
+  }
+}
+
+struct WordList_Previews: PreviewProvider {
+  static var previews: some View {
+    WordList(words: ["ABC", "DEF", "GHI", "JKL"])
+  }
+}
+
 struct SummaryView: View {
   @ObservedObject var store: Store<GameState>
   var dispatch: (AppAction) -> Void
@@ -72,27 +113,14 @@ struct SummaryView: View {
       }
       TabView {
         ScrollView {
-          VStack {
-            if store.state.foundWords.count > 0 {
-              ForEach(store.state.foundWords, id: \.self) { word in
-                Text(word)
-              }
-            } else {
-              Text("No words found")
-            }
-          }.frame(maxWidth: .infinity)
+          WordList(words: store.state.foundWords)
         }.tabItem {
           Image(systemName: "text.justify")
           Text("Found Words (2)")
-        }
-        .tag(0)
+        }.tag(0)
 
         ScrollView {
-          VStack {
-            ForEach(remainingWords, id: \.self) { word in
-              Text(word)
-            }
-          }.frame(maxWidth: .infinity)
+          WordList(words: remainingWords)
         }.tabItem {
           Image(systemName: "text.badge.plus")
           Text("Remaining Words \\(\(remainingWords.count)\\)")
