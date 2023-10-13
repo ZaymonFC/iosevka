@@ -28,8 +28,8 @@ struct SelectionView: View {
     } else {
       return AnyView(
         HStack(spacing: -1) {
-          ForEach(selection, id: \.self) { letter in
-            Text(String(letter))
+          ForEach(selection.indices, id: \.self) { index in
+            Text(String(selection[index]))
               .frame(width: 30, height: 30)
               .border(Color.accentColor, width: 1)
           }
