@@ -14,7 +14,8 @@ let wordPoints: [Int: Int] = [
   24: 17711, 25: 28657, 26: 46368
 ]
 
-let timeLimit: Int = 60 * 3
+// let timeLimit: Int = 60 * 3
+let timeLimit: Int = 5
 
 func calculatePossibleScore(_ words: Set<String>) -> Int {
   words.reduce(0) { $0 + wordPoints[$1.count, default: 0] }
@@ -37,7 +38,6 @@ struct GameState: ModelProtocol {
   var gameId: UUID
   var stateOfTheGame: StateOfTheGame = .playing
   var gameBoard: GameBoard
-  var solver: Solver = .init()
   var selectedCells: [BoardCoordinate] = []
   var selection: [Character] = []
   var foundWords: [String] = []
@@ -47,13 +47,6 @@ struct GameState: ModelProtocol {
 
   var possibleScore: Int
   var score: Int = 0
-
-  init() {
-    gameId = UUID()
-    gameBoard = GameBoard(size: 4)
-    possibleWords = solver.findAllWords(board: gameBoard)
-    possibleScore = calculatePossibleScore(possibleWords)
-  }
 
   static func update(
     state: GameState,
@@ -75,7 +68,7 @@ struct GameState: ModelProtocol {
       let gameBoard = GameBoard(size: 4)
       draft.gameBoard = gameBoard
 
-      draft.possibleWords = state.solver.findAllWords(board: gameBoard)
+      draft.possibleWords = Solver.shared.findAllWords(board: gameBoard)
       draft.possibleScore = calculatePossibleScore(draft.possibleWords)
       draft.score = 0
 

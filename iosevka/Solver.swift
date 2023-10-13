@@ -3,6 +3,8 @@ import Foundation
 let minimumWordLength = 3
 
 class Solver {
+  public static var shared = Solver()
+
   var validWords: Set<String> = []
   let trie: Trie
     
