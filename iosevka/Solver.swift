@@ -2,9 +2,13 @@ import Foundation
 
 let minimumWordLength = 3
 
+struct BoardWord: Equatable {
+  let word: String
+  let path: [BoardCoordinate]
+}
+
 class Solver {
   public static var shared = Solver()
-
   let trie: Trie
     
   init() {
@@ -18,58 +22,60 @@ class Solver {
     
     let words = dictionary
       .split(separator: "\n")
-      .filter { word in word.count >= minimumWordLength }
+      .filter { $0.count >= minimumWordLength }
     
     for word in words { trie.insert(word: String(word)) }
   }
     
-  func findAllWords(board: GameBoard) -> Set<String> {
-    var validWords = Set<String>()
+  func findAllWords(board: GameBoard) -> [BoardWord] {
+    var validWords: [BoardWord] = []
     
     for x in 0..<board.size {
       for y in 0..<board.size {
-        search(board: board, x: x, y: y, validWords: &validWords)
+        search(board: board, x: x, y: y, validWords: &validWords, path: [])
       }
     }
     
-    return validWords
+    return validWords.sorted(by: { a, b in a.word < b.word })
   }
     
-  private func search(board: GameBoard, x: Int, y: Int, validWords: inout Set<String>) {
+  private func search(board: GameBoard, x: Int, y: Int, validWords: inout [BoardWord], path: [BoardCoordinate]) {
     var visited = Array(repeating: Array(repeating: false, count: board.size), count: board.size)
     var currentWord = ""
-        
-    func dfs(x: Int, y: Int) {
+    
+    func dfs(x: Int, y: Int, path: [BoardCoordinate]) {
       guard x >= 0, x < board.size, y >= 0, y < board.size else { return }
       guard !visited[x][y] else { return }
-            
-      if let letter = board[BoardCoordinate(x: x, y: y)] {
+      
+      let coordinate = BoardCoordinate(x: x, y: y)
+      
+      if let letter = board[coordinate] {
         let newWord = currentWord + String(letter)
-                
+        
         if trie.contains(word: newWord) {
-          validWords.insert(newWord)
+          validWords.append(BoardWord(word: newWord, path: path + [coordinate]))
         }
-                
+        
         if !trie.isPrefix(word: newWord) {
           return
         }
-                
+        
         visited[x][y] = true
         let previousWord = currentWord
         currentWord = newWord
                 
-        let adjacentPositions = board.neighbors(of: BoardCoordinate(x: x, y: y))
-                    
+        let adjacentPositions = board.neighbors(of: coordinate)
+        
         for pos in adjacentPositions {
-          dfs(x: pos.x, y: pos.y)
+          dfs(x: pos.x, y: pos.y, path: path + [coordinate])
         }
-                    
+                
         visited[x][y] = false
         currentWord = previousWord
       }
     }
-        
-    dfs(x: x, y: y)
+    
+    dfs(x: x, y: y, path: path)
   }
 }
 

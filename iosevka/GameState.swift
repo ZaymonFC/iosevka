@@ -3,7 +3,7 @@ import Foundation
 import ObservableStore
 
 // -- Domain ------------------------------------------------------------------
-let wordPoints: [Int: Int] = [
+private let wordPoints: [Int: Int] = [
   3: 1, 4: 1, 5: 2,
   6: 3, 7: 5, 8: 8,
   9: 13, 10: 21, 11: 34,
@@ -14,11 +14,13 @@ let wordPoints: [Int: Int] = [
   24: 17711, 25: 28657, 26: 46368
 ]
 
+func scoreWord(_ word: String) -> Int { wordPoints[word.count, default: 0] }
+
 // let timeLimit: Int = 60 * 3
 let timeLimit: Int = 5
 
 func calculatePossibleScore(_ words: Set<String>) -> Int {
-  words.reduce(0) { $0 + wordPoints[$1.count, default: 0] }
+  words.reduce(0) { acc, word in acc + scoreWord(word) }
 }
 
 enum GameAction: Equatable {
@@ -41,7 +43,9 @@ struct GameState: ModelProtocol {
   var selectedCells: [BoardCoordinate] = []
   var selection: [Character] = []
   var foundWords: [String] = []
-  var possibleWords: Set<String> = []
+
+  var boardWords: [BoardWord] = []
+  var wordLookup: Set<String> = []
 
   var timeRemaining: Int = timeLimit
 
@@ -75,8 +79,11 @@ struct GameState: ModelProtocol {
       draft.selection = []
       draft.foundWords = []
 
-      draft.possibleWords = Solver.shared.findAllWords(board: gameBoard)
-      draft.possibleScore = calculatePossibleScore(draft.possibleWords)
+      let boardWords = Solver.shared.findAllWords(board: gameBoard)
+      draft.boardWords = boardWords
+      draft.wordLookup = Set(boardWords.map { boardWord in boardWord.word })
+
+      draft.possibleScore = calculatePossibleScore(draft.wordLookup)
       draft.score = 0
 
       // Start the timer ticking
@@ -110,7 +117,7 @@ struct GameState: ModelProtocol {
       }
 
       if !draft.foundWords.contains(word)
-        && draft.possibleWords.contains(word)
+        && draft.wordLookup.contains(word)
       {
         draft.foundWords.append(word)
         draft.score += wordPoints[word.count] ?? 0
@@ -129,7 +136,7 @@ struct GameState: ModelProtocol {
         return update(state: draft, action: .gameOver, environment: environment)
 
       } else {
-        let fx: Fx<GameAction> = Future {
+        let fx: Fx<GameAction> = Future.detached {
           try await Task.sleep(nanoseconds: 1000000000)
 
           return .tickTimer(draft.timeRemaining - 1)

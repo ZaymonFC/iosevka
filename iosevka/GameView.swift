@@ -8,7 +8,7 @@ struct ScoreView: View {
   var body: some View {
     VStack {
       HStack {
-        Text("Words \(gameState.foundWords.count) / \(gameState.possibleWords.count)")
+        Text("Words \(gameState.foundWords.count) / \(gameState.wordLookup.count)")
         Spacer()
         Text("Score \(gameState.score) / \(gameState.possibleScore)")
         Spacer()
@@ -48,7 +48,10 @@ struct SummaryView: View {
   init(store: Store<GameState>, dispatch: @escaping (AppAction) -> Void) {
     self.store = store
     self.dispatch = dispatch
-    self.remainingWords = store.state.possibleWords.subtracting(store.state.foundWords).sorted()
+    self.remainingWords =
+      store.state.wordLookup.subtracting(store.state.foundWords)
+        .sorted()
+        .sorted(by: { x, y in scoreWord(x) > scoreWord(y) })
   }
 
   var body: some View {
