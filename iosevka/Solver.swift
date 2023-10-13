@@ -5,11 +5,9 @@ let minimumWordLength = 3
 class Solver {
   public static var shared = Solver()
 
-  var validWords: Set<String> = []
   let trie: Trie
     
   init() {
-    // Check that dictionary.txt is included in the bundle
     guard let _ = Bundle.main.path(forResource: "dictionary", ofType: "txt") else {
       fatalError("Couldn't find dictionary.txt in the bundle")
     }
@@ -26,20 +24,18 @@ class Solver {
   }
     
   func findAllWords(board: GameBoard) -> Set<String> {
-    validWords = []
+    var validWords = Set<String>()
     
     for x in 0..<board.size {
       for y in 0..<board.size {
-        search(board: board, x: x, y: y)
+        search(board: board, x: x, y: y, validWords: &validWords)
       }
     }
-    
-    print("Found \(Array(validWords).sorted()) words")
     
     return validWords
   }
     
-  private func search(board: GameBoard, x: Int, y: Int) {
+  private func search(board: GameBoard, x: Int, y: Int, validWords: inout Set<String>) {
     var visited = Array(repeating: Array(repeating: false, count: board.size), count: board.size)
     var currentWord = ""
         
@@ -62,7 +58,6 @@ class Solver {
         let previousWord = currentWord
         currentWord = newWord
                 
-        // Use the neighbours function to get adjacent positions
         let adjacentPositions = board.neighbors(of: BoardCoordinate(x: x, y: y))
                     
         for pos in adjacentPositions {
