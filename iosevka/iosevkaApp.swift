@@ -22,7 +22,6 @@ struct iosevkaApp: App {
   }
 }
 
-
 struct AppView: View {
   @State var appState = AppState.mainMenu
 
@@ -35,12 +34,9 @@ struct AppView: View {
 
   var body: some View {
     switch appState {
-    case .mainMenu: MenuView(dispatch: dispatch)
+    case .mainMenu: MenuView(dispatch: dispatch).fadeIn()
     case .game:
-      VStack {
-        GameView()
-        Button("Main Menu") { dispatch(.mainMenu) }
-      }.fadeIn()
+      VStack { GameView(dispatch: dispatch) }.fadeIn()
     }
   }
 }

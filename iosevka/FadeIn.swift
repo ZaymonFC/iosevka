@@ -8,7 +8,7 @@ struct FadeIn: ViewModifier {
     content
       .opacity(opacity)
       .onAppear {
-        withAnimation(.easeIn(duration: 0.2)) {
+        withAnimation(.easeIn(duration: 0.1)) {
           opacity = 1
         }
       }

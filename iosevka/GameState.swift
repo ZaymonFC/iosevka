@@ -14,7 +14,7 @@ let wordPoints: [Int: Int] = [
   24: 17711, 25: 28657, 26: 46368
 ]
 
-let timeLimit: Int = 90
+let timeLimit: Int = 60 * 3
 
 func calculatePossibleScore(_ words: Set<String>) -> Int {
   words.reduce(0) { $0 + wordPoints[$1.count, default: 0] }
@@ -28,8 +28,14 @@ enum GameAction {
   case gameOver
 }
 
+enum StateOfTheGame {
+  case playing
+  case summary
+}
+
 struct GameState: ModelProtocol {
   var gameId: UUID
+  var stateOfTheGame: StateOfTheGame = .playing
   var gameBoard: GameBoard
   var solver: Solver = .init()
   var selectedCells: [BoardCoordinate] = []
@@ -60,6 +66,7 @@ struct GameState: ModelProtocol {
     case .appear:
       var draft = state
       draft.gameId = UUID()
+      draft.stateOfTheGame = .playing
 
       draft.selectedCells = []
       draft.selection = []
@@ -102,11 +109,11 @@ struct GameState: ModelProtocol {
         word + String(draft.gameBoard[position]!)
       }
 
-      if !draft.foundWords.contains(word) 
-          && draft.possibleWords.contains(word) {
-        
-          draft.foundWords.append(word)
-          draft.score += wordPoints[word.count] ?? 0
+      if !draft.foundWords.contains(word)
+        && draft.possibleWords.contains(word)
+      {
+        draft.foundWords.append(word)
+        draft.score += wordPoints[word.count] ?? 0
       }
 
       draft.selectedCells = []
@@ -134,10 +141,11 @@ struct GameState: ModelProtocol {
       }
 
     case .gameOver:
-      print("Games over boy")
+      var draft = state
 
-      return Update(state: state)
+      draft.stateOfTheGame = .summary
+
+      return Update(state: draft)
     }
   }
 }
-

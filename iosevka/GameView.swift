@@ -1,6 +1,6 @@
 import Foundation
-import SwiftUI
 import ObservableStore
+import SwiftUI
 
 struct ScoreView: View {
   var gameState: GameState
@@ -39,11 +39,32 @@ struct SelectionView: View {
   }
 }
 
-struct GameView: View {
-  @StateObject var store = Store(
-    state: GameState(),
-    environment: AppEnvironment()
-  )
+struct SummaryView: View {
+  @ObservedObject var store: Store<GameState>
+  var dispatch: (AppAction) -> Void
+
+  var body: some View {
+    VStack {
+      Text("Game Over").font(.largeTitle)
+
+      ScoreView(gameState: store.state)
+
+      Spacer()
+
+      HStack {
+        Button("New Game") {
+          store.send(GameAction.appear)
+        }.buttonStyle(.borderedProminent)
+        Button("Main Menu") {
+          dispatch(.mainMenu)
+        }.buttonStyle(.borderedProminent)
+      }
+    }
+  }
+}
+
+struct PlayingView: View {
+  @ObservedObject var store: Store<GameState>
 
   var body: some View {
     VStack {
@@ -59,8 +80,26 @@ struct GameView: View {
   }
 }
 
+struct GameView: View {
+  @StateObject var store = Store(
+    state: GameState(),
+    environment: AppEnvironment()
+  )
+
+  var dispatch: (AppAction) -> Void
+
+  var body: some View {
+    switch store.state.stateOfTheGame {
+    case .playing:
+      return AnyView(PlayingView(store: store)).fadeIn()
+    case .summary:
+      return AnyView(SummaryView(store: store, dispatch: dispatch)).fadeIn()
+    }
+  }
+}
+
 struct GameView_Previews: PreviewProvider {
   static var previews: some View {
-    GameView()
+    GameView(dispatch: { action in print("Dispatching \(action)") })
   }
 }
