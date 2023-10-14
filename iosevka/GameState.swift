@@ -18,6 +18,8 @@ func scoreWord(_ word: String) -> Int { wordPoints[word.count, default: 0] }
 
 let timeLimit: Int = 6 * 30
 
+let boardSize = 4
+
 func calculatePossibleScore(_ words: Set<String>) -> Int {
   words.reduce(0) { acc, word in acc + scoreWord(word) }
 }
@@ -69,7 +71,7 @@ struct GameState: ModelProtocol {
 
       draft.gameId = UUID()
 
-      let gameBoard = GameBoard(size: 4)
+      let gameBoard = GameBoard(size: boardSize)
       draft.gameBoard = gameBoard
 
       draft.stateOfTheGame = .playing

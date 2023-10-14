@@ -123,29 +123,31 @@ struct SummaryView: View {
         .padding(12)
         .frame(width: 200, height: 200)
 
-      VStack {
+      VStack(spacing: 0) {
         HStack {
           Text("Words \(store.state.foundWords.count) / \(store.state.wordLookup.count)")
           Spacer()
           Text("Score \(store.state.score) / \(store.state.possibleScore)")
-        }.padding(.bottom, 12)
-      }.padding(12)
-
-      TabView {
-        ScrollView {
-          WordList(words: store.state.foundWords, selectWord: select)
-        }.tabItem {
-          Image(systemName: "text.justify")
-          Text("Found Words (\(store.state.foundWords.count))")
-        }.tag(0)
-
-        ScrollView {
-          WordList(words: remainingWords, selectWord: select)
-        }.tabItem {
-          Image(systemName: "text.badge.plus")
-          Text("Remaining Words \\(\(remainingWords.count)\\)")
         }
-        .tag(1)
+        .padding(.horizontal, 12)
+        .padding(.bottom, 4)
+
+        TabView {
+          ScrollView {
+            WordList(words: store.state.foundWords, selectWord: select)
+          }.tabItem {
+            Image(systemName: "text.justify")
+            Text("Found Words (\(store.state.foundWords.count))")
+          }.tag(0)
+
+          ScrollView {
+            WordList(words: remainingWords, selectWord: select)
+          }.tabItem {
+            Image(systemName: "text.badge.plus")
+            Text("Remaining Words \\(\(remainingWords.count)\\)")
+          }
+          .tag(1)
+        }
       }
     }
   }
