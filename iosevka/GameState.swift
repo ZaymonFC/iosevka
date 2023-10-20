@@ -16,7 +16,7 @@ private let wordPoints: [Int: Int] = [
 
 func scoreWord(_ word: String) -> Int { wordPoints[word.count, default: 0] }
 
-let timeLimit: Int = 6 * 30
+let timeLimit: Int = 60 * 3
 
 let boardSize = 4
 
@@ -71,8 +71,8 @@ struct GameState: ModelProtocol {
 
       draft.gameId = UUID()
 
-      let gameBoard = GameBoard(size: boardSize)
-      draft.gameBoard = gameBoard
+      let (board, boardWords) = mkGameBoard(size: 4)
+      draft.gameBoard = board
 
       draft.stateOfTheGame = .playing
 
@@ -80,7 +80,6 @@ struct GameState: ModelProtocol {
       draft.selection = []
       draft.foundWords = []
 
-      let boardWords = Solver.shared.findAllWords(board: gameBoard)
       draft.boardWords = boardWords
       draft.wordLookup = Set(boardWords.map { boardWord in boardWord.word })
 

@@ -47,7 +47,7 @@ func randomLetter() -> Character {
   return "#" // This line should never be reached, but is included for safety
 }
 
-struct BoardCoordinate: Equatable { var x: Int; var y: Int }
+struct BoardCoordinate: Equatable, Hashable { var x: Int; var y: Int }
 
 struct GameBoard {
   let size: Int
@@ -58,6 +58,17 @@ struct GameBoard {
     self.letters = (0..<size).map { _ in
       (0..<size).map { _ in randomLetter() }
     }
+  }
+
+  init(letters: [[Character]]) {
+    let size = letters.count
+
+    guard letters.allSatisfy({ row in row.count == size }) else {
+      fatalError("Letters array must be square")
+    }
+
+    self.size = size
+    self.letters = letters
   }
 
   subscript(position: BoardCoordinate) -> Character? {
