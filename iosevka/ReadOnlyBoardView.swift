@@ -15,7 +15,7 @@ struct ReadOnlyBoardView: View {
             ForEach(gameBoard.letters[row].indices, id: \.self) { col in
               ReadOnlyCellView(
                 letter: gameBoard.letters[row][col]
-              ).background(selected.contains(BoardCoordinate(x: row, y: col)) ? Color.yellow : Color.white)
+              ).background(selected.contains(BoardCoordinate(row: row, col: col)) ? Color.yellow : Color.white)
                 .frame(width: geometry.size.width / CGFloat(gameBoard.size),
                        height: geometry.size.height / CGFloat(gameBoard.size))
             }

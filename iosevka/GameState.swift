@@ -71,7 +71,7 @@ struct GameState: ModelProtocol {
 
       draft.gameId = UUID()
 
-      let (board, boardWords) = mkGameBoard(size: 4)
+      let (board, boardWords) = mkGameBoard(size: boardSize)
       draft.gameBoard = board
 
       draft.stateOfTheGame = .playing

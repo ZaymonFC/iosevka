@@ -11,7 +11,10 @@ struct GameBoardView: View {
   @State var swipeState: SwipeState
   @State var isDragging = false
 
-  init(gameBoard: GameBoard, selected: [BoardCoordinate], dispatch: @escaping GameDispatch) {
+  init(gameBoard: GameBoard,
+       selected: [BoardCoordinate],
+       dispatch: @escaping GameDispatch)
+  {
     self.gameBoard = gameBoard
     self.selected = selected
     self.dispatch = dispatch
@@ -24,25 +27,17 @@ struct GameBoardView: View {
         ForEach(gameBoard.letters.indices, id: \.self) { row in
           HStack(spacing: 0) {
             ForEach(gameBoard.letters[row].indices, id: \.self) { col in
-              CellView(
-                coordinate: BoardCoordinate(x: row, y: col),
-                letter: gameBoard.letters[row][col],
-                onAppear: { frame in
-                  swipeState.send(.registerTile(
-                    tile: BoardCoordinate(x: row, y: col),
-                    bound: (
-                      frame.origin,
-                      CGPoint(x: frame.origin.x + frame.size.width, y: frame.origin.y + frame.size.height)
-                    )
-                  ))
-                }
-              ).background(selected.contains(BoardCoordinate(x: row, y: col)) ? Color.yellow : Color.white)
+              let coord = BoardCoordinate(row: row, col: col)
+
+              CellView(letter: gameBoard.letters[coord.row][coord.col],
+                       selected: selected.contains(coord))
                 .frame(width: geometry.size.width / CGFloat(gameBoard.size),
                        height: geometry.size.height / CGFloat(gameBoard.size))
             }
           }
         }
       }
+      .onAppear { swipeState.send(.appear(geometry.size)) }
       .border(Color.accentColor, width: 0.5) // Add an external border
       .gesture(
         DragGesture()
@@ -58,7 +53,6 @@ struct GameBoardView: View {
             isDragging = false
           }
       )
-      .coordinateSpace(name: "BoardGeometry")
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .aspectRatio(1, contentMode: .fit)
@@ -66,12 +60,11 @@ struct GameBoardView: View {
 }
 
 struct CellView: View {
-  let coordinate: BoardCoordinate
   let letter: Character
-  var onAppear: ((CGRect) -> Void)?
+  let selected: Bool
 
   var body: some View {
-    GeometryReader { geometry in
+    GeometryReader { _ in
       Text(String(letter))
         .font(.title)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -81,9 +74,7 @@ struct CellView: View {
             .padding(.top, 0.5)
             .padding(.leading, 0.5)
         )
-        .onAppear {
-          self.onAppear?(geometry.frame(in: CoordinateSpace.named("BoardGeometry")))
-        }
+        .background(selected ? Color.yellow : Color.white)
     }
   }
 }

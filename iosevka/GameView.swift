@@ -161,16 +161,25 @@ struct PlayingView: View {
       ScoreView(gameState: store.state)
       Spacer()
       SelectionView(selection: store.state.selection)
-      // Conditionally render GameBoardView if gameBoard is not nil
+
       if let gameBoard = store.state.gameBoard {
-        GameBoardView(
-          gameBoard: gameBoard,
-          selected: store.state.selectedCells,
-          dispatch: store.send
-        )
+        VStack {
+          GameBoardView(
+            gameBoard: gameBoard,
+            selected: store.state.selectedCells,
+            dispatch: store.send
+          ).padding(4)
+          HStack {
+            Spacer()
+            Button(action: {}) {
+              Image(systemName: "rotate.right.fill")
+                .aspectRatio(1, contentMode: .fill)
+            }
+            .buttonStyle(.bordered)
+          }.padding(.horizontal, 24).padding(.vertical, 12)
+        }
       }
     }.onAppear { store.send(GameAction.appear) }
-    Spacer()
   }
 }
 

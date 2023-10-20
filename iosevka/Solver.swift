@@ -47,7 +47,7 @@ class Solver {
       guard x >= 0, x < board.size, y >= 0, y < board.size else { return }
       guard !visited[x][y] else { return }
       
-      let coordinate = BoardCoordinate(x: x, y: y)
+      let coordinate = BoardCoordinate(row: x, col: y)
       
       if let letter = board[coordinate] {
         let newWord = currentWord + String(letter)
@@ -67,7 +67,7 @@ class Solver {
         let adjacentPositions = board.neighbors(of: coordinate)
         
         for pos in adjacentPositions {
-          dfs(x: pos.x, y: pos.y, path: path + [coordinate])
+          dfs(x: pos.row, y: pos.col, path: path + [coordinate])
         }
                 
         visited[x][y] = false

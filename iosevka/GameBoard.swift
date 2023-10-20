@@ -47,7 +47,7 @@ func randomLetter() -> Character {
   return "#" // This line should never be reached, but is included for safety
 }
 
-struct BoardCoordinate: Equatable, Hashable { var x: Int; var y: Int }
+struct BoardCoordinate: Equatable, Hashable { var row: Int; var col: Int }
 
 struct GameBoard {
   let size: Int
@@ -72,10 +72,10 @@ struct GameBoard {
   }
 
   subscript(position: BoardCoordinate) -> Character? {
-    guard position.x >= 0, position.x < size else { return nil }
-    guard position.y >= 0, position.y < size else { return nil }
+    guard position.row >= 0, position.row < size else { return nil }
+    guard position.col >= 0, position.col < size else { return nil }
 
-    return letters[position.x][position.y]
+    return letters[position.row][position.col]
   }
 }
 
@@ -87,11 +87,11 @@ extension GameBoard {
     var neighbors: [BoardCoordinate] = []
 
     for i in 0..<dx.count {
-      let newX = position.x + dx[i]
-      let newY = position.y + dy[i]
+      let newX = position.row + dx[i]
+      let newY = position.col + dy[i]
 
       if newX >= 0, newX < size, newY >= 0, newY < size {
-        neighbors.append(BoardCoordinate(x: newX, y: newY))
+        neighbors.append(BoardCoordinate(row: newX, col: newY))
       }
     }
 
@@ -105,9 +105,37 @@ extension GameBoard: Equatable {
   }
 }
 
+extension GameBoard {
+  func rotatedBoardCoordinates(of rotation: Int) -> [[BoardCoordinate]] {
+    var coordinates: [[BoardCoordinate]] = Array(repeating: [], count: size)
+
+    for i in 0..<size {
+      for j in 0..<size {
+        var row = i
+        var column = j
+
+        switch rotation {
+        case 90:
+          (row, column) = (column, size - 1 - row)
+        case 180:
+          (row, column) = (size - 1 - row, size - 1 - column)
+        case 270:
+          (row, column) = (size - 1 - column, row)
+        default:
+          break
+        }
+
+        coordinates[row].append(BoardCoordinate(row: i, col: j))
+      }
+    }
+
+    return coordinates
+  }
+}
+
 func cardinalAngle(_ a: BoardCoordinate, _ b: BoardCoordinate) -> Double {
-  let dx = Double(a.y - b.y)
-  let dy = Double(a.x - b.x)
+  let dx = Double(a.col - b.col)
+  let dy = Double(a.row - b.row)
 
   return atan2(dy, dx)
 }

@@ -34,7 +34,7 @@ func angleDifference(_ angle1: Double, _ angle2: Double) -> Double {
 }
 
 enum SwipeAction {
-  case registerTile(tile: BoardCoordinate, bound: Bounds)
+  case appear(CGSize)
   case dragStart(CGPoint)
   case positionUpdated(CGPoint)
   case dragStop(CGPoint)
@@ -47,7 +47,7 @@ class SwipeState: ObservableObject {
   var gameBoard: GameBoard
   var dispatch: GameDispatch
 
-  var tileRegistry: [(BoardCoordinate, Bounds)] = []
+  var tileSize: CGFloat?
 
   var swipe: [CGPoint] = []
   var visited: [BoardCoordinate] = []
@@ -57,6 +57,15 @@ class SwipeState: ObservableObject {
     self.dispatch = dispatch
 
     initPublishers()
+  }
+
+  func positionToCoordinate(_ position: CGPoint) -> BoardCoordinate {
+    guard let tileSize = tileSize else { fatalError("Tile size not set") }
+
+    let col = Int(position.x / tileSize)
+    let row = Int(position.y / tileSize)
+
+    return BoardCoordinate(row: row, col: col)
   }
 
   func send(_ action: SwipeAction) {
@@ -70,21 +79,13 @@ class SwipeState: ObservableObject {
       .store(in: &cancellableSet)
   }
 
-  func findTileByPosition(_ position: CGPoint) -> (BoardCoordinate, Bounds)? {
-    tileRegistry.first { _, bounds in pointInBounds(position, bounds) }
-  }
-
   func handleAction(_ action: SwipeAction) {
     switch action {
-    case .registerTile(let coordinate, let bounds):
-      print("Registering tile: \(coordinate) \(bounds)")
-      tileRegistry.append((coordinate, bounds))
+    case .appear(let size):
+      tileSize = size.width / CGFloat(gameBoard.size)
 
     case .dragStart(let position):
-      guard let (tileCoordinate, _) = findTileByPosition(position) else {
-        print("No tile found at position \(position)")
-        return
-      }
+      let tileCoordinate = positionToCoordinate(position)
 
       swipe = [position]
       visited = [tileCoordinate]
@@ -92,7 +93,8 @@ class SwipeState: ObservableObject {
 
     case .positionUpdated(let position):
       swipe.append(position)
-      guard let (tileCoordinate, _) = findTileByPosition(position) else { return }
+
+      let tileCoordinate = positionToCoordinate(position)
 
       guard let previous = visited.last else {
         visited.append(tileCoordinate)
@@ -105,10 +107,7 @@ class SwipeState: ObservableObject {
 
       let angle = cardinalAngle(previous, tileCoordinate) + 3.14 // Comparisons are off by PI radians ¯\_(ツ)_/¯
 
-      guard let (_, previousTileBounds) = tileRegistry.first(where: { $0.0 == previous })
-      else { print("No previous tile found"); return }
-
-      guard let lastPointInPreviousTile = swipe.last(where: { pointInBounds($0, previousTileBounds) })
+      guard let lastPointInPreviousTile = swipe.last(where: { positionToCoordinate($0) == previous })
       else { print("No last point in previous tile"); return }
 
       let swipeAngle = angleBetweenPoints(lastPointInPreviousTile, position)

@@ -8,9 +8,9 @@
 import Foundation
 
 func coordinateSquare(size: Int) -> Set<BoardCoordinate> {
-  Set((0..<size).flatMap { x in
-    (0..<size).map { y in
-      BoardCoordinate(x: x, y: y)
+  Set((0..<size).flatMap { row in
+    (0..<size).map { col in
+      BoardCoordinate(row: row, col: col)
     }
   })
 }
@@ -31,7 +31,7 @@ func mkGameBoard(size: Int) -> (GameBoard, [BoardWord]) {
     let newLetter = randomLetter()
 
     var letters = board.letters
-    letters[pos.x][pos.y] = newLetter
+    letters[pos.row][pos.col] = newLetter
 
     board = GameBoard(letters: letters)
     boardWords = Solver.shared.findAllWords(board: board)
