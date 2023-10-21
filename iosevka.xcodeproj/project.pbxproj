@@ -26,6 +26,7 @@
 		C899EB902AD74E8800378B32 /* FadeIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = C899EB8F2AD74E8800378B32 /* FadeIn.swift */; };
 		C8A64EBC2AD372D900F1617E /* dictionary.txt in Resources */ = {isa = PBXBuildFile; fileRef = C8A64EBB2AD372D900F1617E /* dictionary.txt */; };
 		C8C7195B2AD8750700D1D6D9 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C7195A2AD8750700D1D6D9 /* GameView.swift */; };
+		C8D2CD142AE3384E0096D7F2 /* Rotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D2CD132AE3384E0096D7F2 /* Rotation.swift */; };
 		C8E846BE2AE1F63A000621CD /* BoardGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E846BD2AE1F63A000621CD /* BoardGeneration.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 		C899EB8F2AD74E8800378B32 /* FadeIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeIn.swift; sourceTree = "<group>"; };
 		C8A64EBB2AD372D900F1617E /* dictionary.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dictionary.txt; sourceTree = "<group>"; };
 		C8C7195A2AD8750700D1D6D9 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		C8D2CD132AE3384E0096D7F2 /* Rotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rotation.swift; sourceTree = "<group>"; };
 		C8E846BD2AE1F63A000621CD /* BoardGeneration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardGeneration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -135,6 +137,7 @@
 				C899EB8F2AD74E8800378B32 /* FadeIn.swift */,
 				C88ABDCB2AD9C5F700FF82C5 /* ReadOnlyBoardView.swift */,
 				C8E846BD2AE1F63A000621CD /* BoardGeneration.swift */,
+				C8D2CD132AE3384E0096D7F2 /* Rotation.swift */,
 			);
 			path = iosevka;
 			sourceTree = "<group>";
@@ -310,6 +313,7 @@
 				C894D4A92AD0AB3600C3739C /* SwipeState.swift in Sources */,
 				C8C7195B2AD8750700D1D6D9 /* GameView.swift in Sources */,
 				C894D4A72ACFC79C00C3739C /* GameState.swift in Sources */,
+				C8D2CD142AE3384E0096D7F2 /* Rotation.swift in Sources */,
 				C894D4A22ACF799600C3739C /* GameBoardView.swift in Sources */,
 				C899EB8E2AD74A3C00378B32 /* MenuView.swift in Sources */,
 				C8450D5C2ACF692900A1E582 /* iosevkaApp.swift in Sources */,

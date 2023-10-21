@@ -167,11 +167,12 @@ struct PlayingView: View {
           GameBoardView(
             gameBoard: gameBoard,
             selected: store.state.selectedCells,
-            dispatch: store.send
+            dispatch: store.send,
+            rotation: store.state.rotation
           ).padding(4)
           HStack {
             Spacer()
-            Button(action: {}) {
+            Button(action: { store.send(.rotateBoard) }) {
               Image(systemName: "rotate.right.fill")
                 .aspectRatio(1, contentMode: .fill)
             }

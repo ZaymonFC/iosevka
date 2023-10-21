@@ -49,6 +49,19 @@ func randomLetter() -> Character {
 
 struct BoardCoordinate: Equatable, Hashable { var row: Int; var col: Int }
 
+extension BoardCoordinate {
+  func withRotation(of angle: RotationAngle, inMatrixOfSize n: Int) -> BoardCoordinate {
+    let coordinate = self
+
+    switch angle {
+    case .degrees0: return coordinate
+    case .degrees90: return BoardCoordinate(row: n - 1 - coordinate.col, col: coordinate.row)
+    case .degrees180: return BoardCoordinate(row: n - 1 - coordinate.row, col: n - 1 - coordinate.col)
+    case .degrees270: return BoardCoordinate(row: coordinate.col, col: n - 1 - coordinate.row)
+    }
+  }
+}
+
 struct GameBoard {
   let size: Int
   public private(set) var letters: [[Character]]

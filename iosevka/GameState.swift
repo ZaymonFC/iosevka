@@ -28,6 +28,7 @@ enum GameAction: Equatable {
   case appear
   case selectLetter(position: BoardCoordinate)
   case submitWord
+  case rotateBoard
   case tickTimer(_ remainingTime: Int)
   case gameOver
 }
@@ -52,6 +53,9 @@ struct GameState: ModelProtocol {
 
   var possibleScore: Int = 0
   var score: Int = 0
+
+  // View Concerns
+  var rotation: RotationAngle = .degrees0
 
   static func update(
     state: GameState,
@@ -92,6 +96,8 @@ struct GameState: ModelProtocol {
     case let .selectLetter(position):
       var draft = state
 
+      var position = position.withRotation(of: draft.rotation, inMatrixOfSize: draft.gameBoard!.size)
+
       // Check that the new position is a neighbour of the last selection
       guard let lastPosition = draft.selectedCells.last else {
         draft.selectedCells.append(position)
@@ -125,6 +131,17 @@ struct GameState: ModelProtocol {
 
       draft.selectedCells = []
       draft.selection = []
+
+      return Update(state: draft)
+
+    case .rotateBoard:
+      var draft = state
+
+      // Don't rotate in the middle of selecting a word
+      guard draft.selectedCells.isEmpty else { return Update(state: state) }
+
+      draft.rotation = nextRotation(of: draft.rotation)
+
       return Update(state: draft)
 
     case let .tickTimer(timeRemaining):

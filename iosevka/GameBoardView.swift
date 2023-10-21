@@ -7,18 +7,21 @@ struct GameBoardView: View {
   let gameBoard: GameBoard
   let selected: [BoardCoordinate]
   let dispatch: GameDispatch
+  let rotation: RotationAngle
 
   @State var swipeState: SwipeState
   @State var isDragging = false
 
   init(gameBoard: GameBoard,
        selected: [BoardCoordinate],
-       dispatch: @escaping GameDispatch)
+       dispatch: @escaping GameDispatch,
+       rotation: RotationAngle)
   {
     self.gameBoard = gameBoard
     self.selected = selected
     self.dispatch = dispatch
     self.swipeState = SwipeState(gameBoard: gameBoard, dispatch: dispatch)
+    self.rotation = rotation
   }
 
   var body: some View {
@@ -27,7 +30,9 @@ struct GameBoardView: View {
         ForEach(gameBoard.letters.indices, id: \.self) { row in
           HStack(spacing: 0) {
             ForEach(gameBoard.letters[row].indices, id: \.self) { col in
-              let coord = BoardCoordinate(row: row, col: col)
+              let coord =
+                BoardCoordinate(row: row, col: col)
+                  .withRotation(of: rotation, inMatrixOfSize: gameBoard.size)
 
               CellView(letter: gameBoard.letters[coord.row][coord.col],
                        selected: selected.contains(coord))

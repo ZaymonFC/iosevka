@@ -62,15 +62,13 @@ class SwipeState: ObservableObject {
   func positionToCoordinate(_ position: CGPoint) -> BoardCoordinate {
     guard let tileSize = tileSize else { fatalError("Tile size not set") }
 
-    let col = Int(position.x / tileSize)
-    let row = Int(position.y / tileSize)
+    let col = min(Int(position.x / tileSize), gameBoard.size - 1)
+    let row = min(Int(position.y / tileSize), gameBoard.size - 1)
 
     return BoardCoordinate(row: row, col: col)
   }
 
-  func send(_ action: SwipeAction) {
-    action$.send(action)
-  }
+  func send(_ action: SwipeAction) { action$.send(action) }
 
   func initPublishers() {
     action$
