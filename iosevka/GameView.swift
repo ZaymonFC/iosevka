@@ -6,16 +6,25 @@ struct ScoreView: View {
   var gameState: GameState
 
   var body: some View {
-    VStack {
+    VStack(spacing: 24) {
       HStack {
-        Text("Words \(gameState.foundWords.count) / \(gameState.wordLookup.count)")
+        Image(systemName: "sparkle.magnifyingglass")
+          .symbolEffect(.bounce, options: .speed(10), value: gameState.foundWords.count)
+        Text("\(gameState.foundWords.count) / \(gameState.wordLookup.count)")
+
         Spacer()
-        Text("Score \(gameState.score) / \(gameState.possibleScore)")
+
+        Image(systemName: "star.circle")
+          .symbolEffect(.bounce, options: .speed(9), value: gameState.score)
+        Text("\(gameState.score) / \(gameState.possibleScore)")
+
         Spacer()
-        Text("Time: \(gameState.timeRemaining)s")
+
+        Image(systemName: "clock")
+        Text("\(gameState.timeRemaining)s")
       }.padding(.bottom, 12)
       Text(gameState.foundWords.joined(separator: " "))
-    }.padding(12)
+    }.padding(12).font(.title2)
   }
 }
 
@@ -175,7 +184,7 @@ struct PlayingView: View {
             Button(action: { store.send(.rotateBoard) }) {
               Image(systemName: "rotate.right.fill")
                 .aspectRatio(1, contentMode: .fill)
-                .symbolEffect(.bounce, value: store.state.rotation)
+                .symbolEffect(.bounce.down.byLayer, options: .speed(5), value: store.state.rotation)
                 .font(.largeTitle)
             }
           }.padding(.horizontal, 24).padding(.top, 8)
