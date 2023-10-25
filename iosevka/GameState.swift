@@ -132,7 +132,7 @@ struct GameState: ModelProtocol {
       draft.selectedCells = []
       draft.selection = []
 
-      return Update(state: draft)
+      return Update(state: draft).animation(.default.speed(5))
 
     case .rotateBoard:
       var draft = state
