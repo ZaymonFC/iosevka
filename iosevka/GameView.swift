@@ -24,7 +24,7 @@ struct ScoreView: View {
         Text("\(gameState.timeRemaining)s")
       }.padding(.bottom, 12)
       Text(gameState.foundWords.joined(separator: " "))
-    }.padding(12).font(.title2)
+    }.padding(12).font(.monospacedDigit(.title2)())
   }
 }
 
