@@ -175,9 +175,10 @@ struct PlayingView: View {
             Button(action: { store.send(.rotateBoard) }) {
               Image(systemName: "rotate.right.fill")
                 .aspectRatio(1, contentMode: .fill)
+                .symbolEffect(.bounce, value: store.state.rotation)
+                .font(.largeTitle)
             }
-            .buttonStyle(.bordered)
-          }.padding(.horizontal, 24).padding(.vertical, 12)
+          }.padding(.horizontal, 24).padding(.top, 8)
         }
       }
     }.onAppear { store.send(GameAction.appear) }

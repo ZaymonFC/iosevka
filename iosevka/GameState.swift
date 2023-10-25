@@ -96,7 +96,7 @@ struct GameState: ModelProtocol {
     case let .selectLetter(position):
       var draft = state
 
-      var position = position.withRotation(of: draft.rotation, inMatrixOfSize: draft.gameBoard!.size)
+      let position = position.withRotation(of: draft.rotation, inMatrixOfSize: draft.gameBoard!.size)
 
       // Check that the new position is a neighbour of the last selection
       guard let lastPosition = draft.selectedCells.last else {
