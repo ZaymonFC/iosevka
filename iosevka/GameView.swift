@@ -24,7 +24,7 @@ struct ScoreView: View {
         Text("\(gameState.timeRemaining)s")
       }.padding(.bottom, 12)
       Text(gameState.foundWords.joined(separator: " "))
-    }.padding(12).font(.monospacedDigit(.title2)())
+    }.padding(12).font(.monospacedDigit(.system(size: 18))())
   }
 }
 
@@ -176,6 +176,8 @@ struct PlayingView: View {
           GameBoardView(
             gameBoard: gameBoard,
             selected: store.state.selectedCells,
+            flashingLetters: store.state.flashingLetters,
+            flashType: store.state.flashType,
             dispatch: store.send,
             rotation: store.state.rotation
           ).padding(4)

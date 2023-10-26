@@ -24,12 +24,20 @@ func calculatePossibleScore(_ words: Set<String>) -> Int {
   words.reduce(0) { acc, word in acc + scoreWord(word) }
 }
 
+enum SubmissionResult {
+  case invalid
+  case duplicate
+  case valid
+}
+
 enum GameAction: Equatable {
   case appear
   case selectLetter(position: BoardCoordinate)
   case submitWord
   case rotateBoard
   case tickTimer(_ remainingTime: Int)
+  case flashLetters(for: SubmissionResult, letters: [BoardCoordinate])
+  case clearFlashedLetters
   case gameOver
 }
 
@@ -56,6 +64,9 @@ struct GameState: ModelProtocol {
 
   // View Concerns
   var rotation: RotationAngle = .degrees0
+
+  var flashingLetters: [BoardCoordinate] = []
+  var flashType = SubmissionResult.invalid
 
   static func update(
     state: GameState,
@@ -116,29 +127,54 @@ struct GameState: ModelProtocol {
 
     case .submitWord:
       var draft = state
+      var actions = [] as [GameAction]
 
       // Convert selected cells to a word and add to submittedWords
       let word = draft.selectedCells.reduce("") { word, position in
         word + String(draft.gameBoard![position]!)
       }
 
-      if !draft.foundWords.contains(word)
-        && draft.wordLookup.contains(word)
-      {
+      if draft.foundWords.contains(word) {
+        actions.append(.flashLetters(for: .duplicate, letters: draft.selectedCells))
+
+      } else if !draft.wordLookup.contains(word) {
+        actions.append(.flashLetters(for: .invalid, letters: draft.selectedCells))
+
+      } else {
         draft.foundWords.append(word)
         draft.score += wordPoints[word.count] ?? 0
+        actions.append(.flashLetters(for: .valid, letters: draft.selectedCells))
       }
 
       draft.selectedCells = []
       draft.selection = []
 
-      return Update(state: draft).animation(.default.speed(5))
+      return update(state: draft, actions: actions, environment: environment).animation(.default.speed(5))
+
+    case let .flashLetters(for: result, letters: letters):
+      var draft = state
+
+      draft.flashingLetters = letters
+      draft.flashType = result
+
+      let fx: Fx<GameAction> = Future.detached {
+        try await Task.sleep(nanoseconds: 1000000000 / 9)
+        return GameAction.clearFlashedLetters
+      }.catch { _ in Just(GameAction.appear) }.eraseToAnyPublisher()
+
+      return Update(state: draft, fx: fx).animation(.default.speed(5))
+
+    case .clearFlashedLetters:
+      var draft = state
+      draft.flashingLetters = []
+      return Update(state: draft).animation(.default.speed(3))
 
     case .rotateBoard:
       var draft = state
 
-      // Don't rotate in the middle of selecting a word
-      guard draft.selectedCells.isEmpty else { return Update(state: state) }
+      // Don't rotate in the middle of selecting a word or flashing
+      guard draft.selectedCells.isEmpty && draft.flashingLetters.isEmpty
+      else { return Update(state: state) }
 
       draft.rotation = nextRotation(of: draft.rotation)
 
@@ -157,9 +193,7 @@ struct GameState: ModelProtocol {
           try await Task.sleep(nanoseconds: 1000000000)
 
           return .tickTimer(draft.timeRemaining - 1)
-        }.catch { _ in
-          Just(GameAction.appear)
-        }.eraseToAnyPublisher()
+        }.catch { _ in Just(GameAction.appear) }.eraseToAnyPublisher()
 
         return Update(state: draft, fx: fx)
       }

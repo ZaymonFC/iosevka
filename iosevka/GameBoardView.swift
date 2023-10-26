@@ -3,9 +3,19 @@ import Foundation
 import ObservableStore
 import SwiftUI
 
+func submissionResultToColor(_ result: SubmissionResult) -> Color {
+  switch result {
+    case .invalid: return Color.red
+    case .duplicate: return Color.yellow
+    case .valid: return Color.green
+  }
+}
+
 struct GameBoardView: View {
   let gameBoard: GameBoard
   let selected: [BoardCoordinate]
+  let flashingLetters: [BoardCoordinate]
+  let flashType: SubmissionResult
   let dispatch: GameDispatch
   let rotation: RotationAngle
 
@@ -14,11 +24,15 @@ struct GameBoardView: View {
 
   init(gameBoard: GameBoard,
        selected: [BoardCoordinate],
+       flashingLetters: [BoardCoordinate],
+       flashType: SubmissionResult,
        dispatch: @escaping GameDispatch,
        rotation: RotationAngle)
   {
     self.gameBoard = gameBoard
     self.selected = selected
+    self.flashingLetters = flashingLetters
+    self.flashType = flashType
     self.dispatch = dispatch
     self.swipeState = SwipeState(gameBoard: gameBoard, dispatch: dispatch)
     self.rotation = rotation
@@ -35,7 +49,9 @@ struct GameBoardView: View {
                   .withRotation(of: rotation, inMatrixOfSize: gameBoard.size)
 
               CellView(letter: gameBoard.letters[coord.row][coord.col],
-                       selected: selected.contains(coord))
+                       selected: selected.contains(coord),
+                       flashing: flashingLetters.contains(coord),
+                       flashType: flashType)
                 .frame(width: geometry.size.width / CGFloat(gameBoard.size),
                        height: geometry.size.height / CGFloat(gameBoard.size))
             }
@@ -67,6 +83,18 @@ struct GameBoardView: View {
 struct CellView: View {
   let letter: Character
   let selected: Bool
+  let flashing: Bool
+  let flashType: SubmissionResult
+
+  func backgroundColor(selected: Bool, flashing: Bool, flashType: SubmissionResult) -> Color {
+    if flashing {
+      return submissionResultToColor(flashType)
+    } else if selected {
+      return Color.accentColor.opacity(0.2)
+    } else {
+      return Color.white
+    }
+  }
 
   var body: some View {
     GeometryReader { _ in
@@ -79,7 +107,7 @@ struct CellView: View {
             .padding(.top, 0.5)
             .padding(.leading, 0.5)
         )
-        .background(selected ? Color.yellow : Color.white)
+        .background(backgroundColor(selected: selected, flashing: flashing, flashType: flashType))
     }
   }
 }
