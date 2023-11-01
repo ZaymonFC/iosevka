@@ -13,11 +13,16 @@ struct ReadOnlyBoardView: View {
         ForEach(gameBoard.letters.indices, id: \.self) { row in
           HStack(spacing: 0) {
             ForEach(gameBoard.letters[row].indices, id: \.self) { col in
-              ReadOnlyCellView(
-                letter: gameBoard.letters[row][col]
-              ).background(selected.contains(BoardCoordinate(row: row, col: col)) ? Color.yellow : Color.white)
-                .frame(width: geometry.size.width / CGFloat(gameBoard.size),
-                       height: geometry.size.height / CGFloat(gameBoard.size))
+              let coordinate = BoardCoordinate(row: row, col: col)
+              let isSelected = selected.contains(coordinate)
+              let opacityValue = isSelected ? calculateOpacity(for: coordinate) : 0
+
+              ReadOnlyCellView(letter: gameBoard.letters[row][col])
+                .background(isSelected ? Color.accentColor.opacity(opacityValue) : Color.white)
+                .frame(
+                  width: geometry.size.width / CGFloat(gameBoard.size),
+                  height: geometry.size.height / CGFloat(gameBoard.size)
+                )
             }
           }
         }
@@ -25,6 +30,16 @@ struct ReadOnlyBoardView: View {
       .border(Color.accentColor, width: 1)
     }
     .aspectRatio(1, contentMode: .fit)
+  }
+
+  private func calculateOpacity(for coordinate: BoardCoordinate) -> Double {
+    guard let index = selected.firstIndex(of: coordinate) else { return 0 }
+
+    return 1 - interpolate(
+      value: Double(index),
+      from: 0...Double(selected.count - 1),
+      to: 0.4...0.65
+    )
   }
 }
 
